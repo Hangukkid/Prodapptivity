@@ -7,7 +7,7 @@
     tools:context=".Main_Screen">
 
     <Button
-        android:id="@+id/pauseBtn"
+        android:id="@+id/pause_btn"
         android:layout_width="66dp"
         android:layout_height="39dp"
         android:layout_marginEnd="8dp"
@@ -22,7 +22,7 @@
         app:layout_constraintVertical_bias="0.855" />
 
     <Button
-        android:id="@+id/startBtn"
+        android:id="@+id/start_btn"
         android:layout_width="66dp"
         android:layout_height="39dp"
         android:layout_marginEnd="8dp"
@@ -37,37 +37,22 @@
         app:layout_constraintVertical_bias="0.855" />
 
     <Button
-        android:id="@+id/stopBtn"
+        android:id="@+id/reset_btn"
         android:layout_width="66dp"
         android:layout_height="39dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="Stop"
+        android:text="Reset"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.87"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.855" />
-
-    <Button
-        android:id="@+id/resumeBtn"
-        android:layout_width="76dp"
-        android:layout_height="39dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Resume"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.619"
+        app:layout_constraintHorizontal_bias="0.783"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.855" />
 
     <TextView
-        android:id="@+id/timerValue"
+        android:id="@+id/timer_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"

@@ -8,13 +8,27 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.os.CountDownTimer;
 
+import java.util.Locale;
+
 public class Main_Screen extends AppCompatActivity {
 
-    private long timeRemaining = 0;
+/**********************************VARIABLES*************************************************/
+    private static final long START_TIME_IN_MILLIS = 600000;
+    private static final long COUNT_DOWN_INTERVAL_IN_MILLIS = 1000;
 
-    private boolean isPaused = false;
-    private boolean isCancelled = false;
+    private TextView timer_value;
+    private Button start_btn;
+    private Button pause_btn;
+    private Button reset_btn;
 
+    private CountDownTimer count_down_timer;
+
+    private boolean is_timer_running;
+
+    private long time_left_in_millis = START_TIME_IN_MILLIS;
+
+
+/****************************ACTIVITY CREATION***************************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -22,144 +36,75 @@ public class Main_Screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__screen);
 
+        timer_value = (TextView) findViewById(R.id.timer_value);
+        start_btn = (Button) findViewById(R.id.start_btn);
+        pause_btn = (Button) findViewById(R.id.pause_btn);
+        reset_btn = (Button) findViewById(R.id.reset_btn);
 
-        //Final means its value will never be changed
-        final TextView timerValue = (TextView) findViewById(R.id.timerValue);
-        final Button startBtn = (Button) findViewById(R.id.startBtn);
-        final Button pauseBtn = (Button) findViewById(R.id.pauseBtn);
-        final Button resumeBtn = (Button) findViewById(R.id.resumeBtn);
-        final Button stopBtn = (Button) findViewById(R.id.stopBtn);
-
-
-        //Change to a lighter grey to indicate it cannot be clicked
-        pauseBtn.setEnabled(false);
-        resumeBtn.setEnabled(false);
-        stopBtn.setEnabled(false);
-
-        startBtn.setOnClickListener(new View.OnClickListener() {
+        start_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isPaused = false;
-                isCancelled = false;
-
-                pauseBtn.setEnabled(true);
-                stopBtn.setEnabled(true);
-
-                startBtn.setEnabled(false);
-                resumeBtn.setEnabled(false);
-
-
-                //30 seconds
-                final long millisInFuture = 30000;
-
-                //1 second
-                long countDownInterval = 1000;
-
-                //Initialize a new CountDownTimer instance
-                CountDownTimer timer;
-                timer = new CountDownTimer(millisInFuture, countDownInterval) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        if (isPaused || isCancelled){
-                            cancel();
-                        }
-                        else {
-                            timerValue.setText(millisUntilFinished/1000 + "");
-                            timeRemaining = millisUntilFinished;
-                        }
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        timerValue.setText("Done");
-
-                        startBtn.setEnabled(true);
-
-                        resumeBtn.setEnabled(false);
-                        pauseBtn.setEnabled(false);
-                        stopBtn.setEnabled(false);
-
-                    }
-                }.start();
-            }
-        });
-
-        pauseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isPaused = true;
-                isCancelled = false;
-
-                startBtn.setEnabled(true);
-                resumeBtn.setEnabled(true);
-                stopBtn.setEnabled(true);
-
-                pauseBtn.setEnabled(false);
-
-
-            }
-        });
-
-        resumeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isPaused = false;
-                isCancelled = false;
-
-                pauseBtn.setEnabled(true);
-                stopBtn.setEnabled(true);
-
-                startBtn.setEnabled(false);
-                resumeBtn.setEnabled(false);
-
-                final long millisInFuture = timeRemaining;
-                long countDownInterval = 1000;
-
-                CountDownTimer timer;
-                timer = new CountDownTimer(millisInFuture, countDownInterval) {
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        if (isPaused || isCancelled){
-                            cancel();
-                        }
-                        else {
-                            timerValue.setText(millisUntilFinished/1000 + "");
-                            timeRemaining = millisUntilFinished;
-                        }
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        timerValue.setText("Done");
-
-                        startBtn.setEnabled(true);
-
-                        resumeBtn.setEnabled(false);
-                        pauseBtn.setEnabled(false);
-                        stopBtn.setEnabled(false);
-                    }
-                }.start();
-
-                stopBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        isCancelled = true;
-
-                        startBtn.setEnabled(true);
-
-                        pauseBtn.setEnabled(false);
-                        resumeBtn.setEnabled(false);
-                        stopBtn.setEnabled(false);
-
-                        timerValue.setText("Timer stopped");
-                    }
-                });
-
-
+                startTimer();
             }
         });
 
 
+        pause_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pauseTimer();
+            }
+        });
 
+        reset_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetTimer();
+            }
+        });
+
+        updateCountDownText();
+    }
+
+/************************HELPER FUNCTIONS*********************************************************/
+
+    private void startTimer(){
+        count_down_timer = new CountDownTimer(time_left_in_millis, COUNT_DOWN_INTERVAL_IN_MILLIS) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                //If we cancel the timer and make a new one, the timer will resume from before
+                time_left_in_millis = millisUntilFinished;
+                updateCountDownText();
+            }
+
+            @Override
+            public void onFinish() {
+                is_timer_running = false;
+            }
+        }.start();
+
+        is_timer_running = true;
+    }
+
+    private void pauseTimer(){
+        count_down_timer.cancel();
+        is_timer_running = false;
+    }
+
+    private void resetTimer(){
+        time_left_in_millis = START_TIME_IN_MILLIS;
+        updateCountDownText();
+    }
+
+
+    private void updateCountDownText(){
+        int minutes = (int) (time_left_in_millis / 1000) / 60;
+        int seconds = (int) (time_left_in_millis / 1000) % 60;
+
+        String time_left_formatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+
+        timer_value.setText(time_left_formatted);
     }
 }
+
