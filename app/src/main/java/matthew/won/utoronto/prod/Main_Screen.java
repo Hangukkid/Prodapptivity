@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.os.CountDownTimer;
 
+import java.util.Calendar;
 import java.util.Locale;
 
 public class Main_Screen extends AppCompatActivity {
@@ -15,6 +16,8 @@ public class Main_Screen extends AppCompatActivity {
 /**********************************VARIABLES*************************************************/
     private static final long START_TIME_IN_MILLIS = 600000;
     private static final long COUNT_DOWN_INTERVAL_IN_MILLIS = 1000;
+
+    private Button calendar_view;
 
     private TextView timer_value;
     private Button start_pause_btn;
@@ -35,9 +38,21 @@ public class Main_Screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__screen);
 
+        calendar_view = (Button) findViewById(R.id.calendar_view);
+
         timer_value = (TextView) findViewById(R.id.timer_value);
         start_pause_btn = (Button) findViewById(R.id.start_pause_btn);
         reset_btn = (Button) findViewById(R.id.reset_btn);
+
+        calendar_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //All activities must be declared in manifest!!
+                Intent switch_to_calendar = new Intent(Main_Screen.this,Calendar_Screen.class);
+                startActivity(switch_to_calendar);
+            }
+        });
 
         start_pause_btn.setOnClickListener(new View.OnClickListener() {
             @Override
