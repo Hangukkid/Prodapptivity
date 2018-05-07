@@ -17,8 +17,7 @@ public class Main_Screen extends AppCompatActivity {
     private static final long COUNT_DOWN_INTERVAL_IN_MILLIS = 1000;
 
     private TextView timer_value;
-    private Button start_btn;
-    private Button pause_btn;
+    private Button start_pause_btn;
     private Button reset_btn;
 
     private CountDownTimer count_down_timer;
@@ -37,22 +36,17 @@ public class Main_Screen extends AppCompatActivity {
         setContentView(R.layout.activity_main__screen);
 
         timer_value = (TextView) findViewById(R.id.timer_value);
-        start_btn = (Button) findViewById(R.id.start_btn);
-        pause_btn = (Button) findViewById(R.id.pause_btn);
+        start_pause_btn = (Button) findViewById(R.id.start_pause_btn);
         reset_btn = (Button) findViewById(R.id.reset_btn);
 
-        start_btn.setOnClickListener(new View.OnClickListener() {
+        start_pause_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTimer();
-            }
-        });
-
-
-        pause_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pauseTimer();
+                if (is_timer_running) {
+                    pauseTimer();
+                } else {
+                    startTimer();
+                }
             }
         });
 
@@ -85,16 +79,22 @@ public class Main_Screen extends AppCompatActivity {
         }.start();
 
         is_timer_running = true;
+        start_pause_btn.setText("Pause");
+        reset_btn.setVisibility(View.INVISIBLE);
     }
 
     private void pauseTimer(){
         count_down_timer.cancel();
         is_timer_running = false;
+        start_pause_btn.setText("Start");
+        reset_btn.setVisibility(View.VISIBLE);
     }
 
     private void resetTimer(){
         time_left_in_millis = START_TIME_IN_MILLIS;
+        is_timer_running= false;
         updateCountDownText();
+        reset_btn.setVisibility(View.INVISIBLE);
     }
 
 
