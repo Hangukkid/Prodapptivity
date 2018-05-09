@@ -32,7 +32,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:text="Add task" />
+        android:text="Add task"
+        android:onClick="addTask"/>
 
 
 </RelativeLayout>
