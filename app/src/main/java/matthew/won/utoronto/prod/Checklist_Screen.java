@@ -13,6 +13,10 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+//Website to create the list:
+//https://guides.codepath.com/android/Basic-Todo-App-Tutorial
+
+
 public class Checklist_Screen extends AppCompatActivity {
 
     private ArrayList<String> tasks;
@@ -42,9 +46,11 @@ public class Checklist_Screen extends AppCompatActivity {
     public void addTask(View v) {
         new_task_text = (EditText) findViewById(R.id.new_task_text);
         String new_task_name = new_task_text.getText().toString();
-        task_adapter.add(new_task_name);
-        new_task_text.setText("");
+        if (new_task_name != null && !new_task_name.isEmpty()){
+            task_adapter.add(new_task_name);
+            new_task_text.setText("");
 
+        }
         /*   Or
         tasks.add(new_task_name);
         task_adapter.notifyDataSetChanged();
