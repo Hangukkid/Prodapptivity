@@ -8,10 +8,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.os.CountDownTimer;
 
-import java.util.Calendar;
 import java.util.Locale;
 
-public class Main_Screen extends AppCompatActivity {
+public class Timer_Screen extends AppCompatActivity {
 
 /**********************************VARIABLES*************************************************/
     private static final long START_TIME_IN_MILLIS = 600000;
@@ -37,7 +36,7 @@ public class Main_Screen extends AppCompatActivity {
 
         //Super allows us to run existing code from an inherited class on top of the code we are going to write
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main__screen);
+        setContentView(R.layout.timer_screen);
 
         checklist_view = (Button) findViewById(R.id.checklist_view);
         calendar_view = (Button) findViewById(R.id.calendar_view);
@@ -50,7 +49,7 @@ public class Main_Screen extends AppCompatActivity {
         checklist_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent switch_to_checklist = new Intent(Main_Screen.this, Checklist_Screen.class);
+                Intent switch_to_checklist = new Intent(Timer_Screen.this, Checklist_Screen.class);
                 startActivity(switch_to_checklist);
             }
         });
@@ -60,7 +59,7 @@ public class Main_Screen extends AppCompatActivity {
             public void onClick(View v) {
 
                 //All activities must be declared in manifest!!
-                Intent switch_to_calendar = new Intent(Main_Screen.this,Calendar_Screen.class);
+                Intent switch_to_calendar = new Intent(Timer_Screen.this,Calendar_Screen.class);
                 startActivity(switch_to_calendar);
             }
         });
