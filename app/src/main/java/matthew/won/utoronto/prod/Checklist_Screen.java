@@ -1,13 +1,11 @@
 package matthew.won.utoronto.prod;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.app.ActionBar;
-import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -33,7 +31,7 @@ public class Checklist_Screen extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.checklist);
+        setContentView(R.layout.checklist_screen);
 
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -48,11 +46,10 @@ public class Checklist_Screen extends AppCompatActivity {
         task_adapter = new ArrayAdapter<String>(this, R.layout.checklist_item, tasks);
         checklist_view.setAdapter(task_adapter);
 
-        tasks.add("First task");
-        tasks.add("Second task");
-
         setupListViewListener();
 
+        //Used to prevent the keyboard from appearing when starting activity
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     public void addTask(View v) {
