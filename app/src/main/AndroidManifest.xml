@@ -8,14 +8,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Timer_Screen">
-        </activity>
-
-        <activity
-            android:name=".Checklist_Screen"
-            android:label="Oh Checklist">
-        </activity>
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <activity
             android:name=".Calendar_Screen"
@@ -27,6 +20,25 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".Checklist_Screen"
+            android:label="Oh Checklist"
+            android:parentActivityName=".Calendar_Screen">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Calendar_Screen"/>
+        </activity>
+
+        <activity
+            android:name=".Timer_Screen"
+            android:label="Oh Timer"
+            android:parentActivityName=".Calendar_Screen">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Calendar_Screen"/>
+        </activity>
 
         <activity
             android:name=".SettingsActivity"

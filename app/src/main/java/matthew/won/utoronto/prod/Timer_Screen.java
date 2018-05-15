@@ -2,6 +2,8 @@ package matthew.won.utoronto.prod;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,8 +18,7 @@ public class Timer_Screen extends AppCompatActivity {
     private static final long START_TIME_IN_MILLIS = 600000;
     private static final long COUNT_DOWN_INTERVAL_IN_MILLIS = 1000;
 
-    private Button checklist_view;
-    private Button calendar_view;
+    private Toolbar toolbar;
 
     private TextView timer_value;
     private Button start_pause_btn;
@@ -38,31 +39,16 @@ public class Timer_Screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timer_screen);
 
-        checklist_view = (Button) findViewById(R.id.checklist_view);
-        calendar_view = (Button) findViewById(R.id.calendar_view);
+        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
 
         timer_value = (TextView) findViewById(R.id.timer_value);
         start_pause_btn = (Button) findViewById(R.id.start_pause_btn);
         reset_btn = (Button) findViewById(R.id.reset_btn);
 
-        //Clicking the button will switch to the according page
-        checklist_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent switch_to_checklist = new Intent(Timer_Screen.this, Checklist_Screen.class);
-                startActivity(switch_to_checklist);
-            }
-        });
-
-        calendar_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //All activities must be declared in manifest!!
-                Intent switch_to_calendar = new Intent(Timer_Screen.this,Calendar_Screen.class);
-                startActivity(switch_to_calendar);
-            }
-        });
 
         //Clicking the button will start the timer
         //If start is pressed, the button will change to "Pause"

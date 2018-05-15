@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,15 +21,25 @@ import java.util.ArrayList;
 
 public class Checklist_Screen extends AppCompatActivity {
 
+    private Toolbar toolbar;
+
+
     private ArrayList<String> tasks;
     private ArrayAdapter<String> task_adapter;
     private ListView checklist_view;
     private EditText new_task_text;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checklist);
+
+        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+
+        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
 
         checklist_view = (ListView) findViewById(R.id.checklist_view);
         tasks = new ArrayList<String>();
