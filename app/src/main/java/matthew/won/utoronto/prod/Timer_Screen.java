@@ -1,6 +1,8 @@
 package matthew.won.utoronto.prod;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
@@ -19,6 +21,8 @@ public class Timer_Screen extends AppCompatActivity {
     private static final long COUNT_DOWN_INTERVAL_IN_MILLIS = 1000;
 
     private Toolbar toolbar;
+
+    private WifiManager wifi;
 
     private TextView timer_value;
     private Button start_pause_btn;
@@ -60,6 +64,7 @@ public class Timer_Screen extends AppCompatActivity {
                     pauseTimer();
                 } else {
                     startTimer();
+
                 }
             }
         });
@@ -95,6 +100,8 @@ public class Timer_Screen extends AppCompatActivity {
         is_timer_running = true;
         start_pause_btn.setText("Pause");
         reset_btn.setVisibility(View.INVISIBLE);
+        wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifi.setWifiEnabled(false);
     }
 
     private void pauseTimer(){
@@ -109,6 +116,8 @@ public class Timer_Screen extends AppCompatActivity {
         is_timer_running= false;
         updateCountDownText();
         reset_btn.setVisibility(View.INVISIBLE);
+        wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifi.setWifiEnabled(true);
     }
 
 
