@@ -1,39 +1,47 @@
 package matthew.won.utoronto.prod;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
+import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.os.CountDownTimer;
+import android.widget.Toast;
 
 import java.util.Locale;
 
 public class Timer_Screen extends AppCompatActivity {
 
 /**********************************VARIABLES*************************************************/
-    private static final long START_TIME_IN_MILLIS = 600000;
     private static final long COUNT_DOWN_INTERVAL_IN_MILLIS = 1000;
+    private Button checklist_view;
+    private Button calendar_view;
+
 
     private Toolbar toolbar;
-
     private WifiManager wifi;
 
     private TextView timer_value;
     private Button start_pause_btn;
     private Button reset_btn;
+    private Button settings_btn;
 
     private CountDownTimer count_down_timer;
 
     private boolean is_timer_running;
 
-    private long time_left_in_millis = START_TIME_IN_MILLIS;
+    private long time_left_in_millis;
 
+    private DatabaseHelper pomodoro_database;
+    private NotificationManager mNotificationManager;
 
 /****************************ACTIVITY CREATION***************************************************/
     @Override
@@ -50,8 +58,21 @@ public class Timer_Screen extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
 
         timer_value = (TextView) findViewById(R.id.timer_value);
+
         start_pause_btn = (Button) findViewById(R.id.start_pause_btn);
         reset_btn = (Button) findViewById(R.id.reset_btn);
+        settings_btn = (Button) findViewById(R.id.settings_btn);
+
+        // Setting up Pomodoro database
+        pomodoro_database = new DatabaseHelper(this);
+        Cursor mCursor = pomodoro_database.getAllData();
+        if (!mCursor.moveToFirst())
+            pomodoro_database.insertData("25", "5", "15", "4");
+
+        Database.setPomodoroDatabase(pomodoro_database);
+
+        updateTimerValue();
+        // Notification manager
 
 
         //Clicking the button will start the timer
@@ -60,9 +81,15 @@ public class Timer_Screen extends AppCompatActivity {
         start_pause_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (is_timer_running) {
+                    Toast.makeText(Main_Screen.this, "turn on notifs", Toast.LENGTH_LONG).show();
+                    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
                     pauseTimer();
                 } else {
+                    Toast.makeText(Main_Screen.this, "turn off notifs", Toast.LENGTH_LONG).show();
+                    changeInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
                     startTimer();
 
                 }
@@ -73,6 +100,14 @@ public class Timer_Screen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 resetTimer();
+            }
+        });
+
+        settings_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent settings = new Intent(Main_Screen.this, Settings.class);
+                startActivity(settings);
             }
         });
 
@@ -112,7 +147,7 @@ public class Timer_Screen extends AppCompatActivity {
     }
 
     private void resetTimer(){
-        time_left_in_millis = START_TIME_IN_MILLIS;
+        updateTimerValue();
         is_timer_running= false;
         updateCountDownText();
         reset_btn.setVisibility(View.INVISIBLE);
@@ -128,6 +163,29 @@ public class Timer_Screen extends AppCompatActivity {
         String time_left_formatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
 
         timer_value.setText(time_left_formatted);
+    }
+
+    private void updateTimerValue () {
+        DatabaseHelper pomodoro_database = Database.getPomodoroDatabase();
+        Cursor res = pomodoro_database.getAllData();
+        if (res.getCount() == 0) {
+            Toast.makeText(this, "Nothing Here", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (res.moveToNext()) {
+            Toast.makeText(this, "Made Changes", Toast.LENGTH_LONG).show();
+            time_left_in_millis = Integer.parseInt(res.getString(1))* 60 * 1000;
+        }
+    }
+
+    private void updateDNDSettings(int interruptionFilter) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // If api level minimum 23
+            if (mNotificationManager.isNotificationPolicyAccessGranted()) {
+                mNotificationManager.setInterruptionFilter(interruptionFilter);
+            } else {
+                Toast.makeText(Main_Screen.this, "Policy not granted", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
 
