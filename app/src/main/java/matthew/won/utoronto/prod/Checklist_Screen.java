@@ -55,23 +55,14 @@ public class Checklist_Screen extends AppCompatActivity {
     public void addTask(View v) {
         new_task_text = (EditText) findViewById(R.id.new_task_text);
         String new_task_name = new_task_text.getText().toString();
-        if (new_task_name != null && !new_task_name.isEmpty()){
+        if (new_task_name != null && !new_task_name.isEmpty()) {
             task_adapter.add(new_task_name);
             new_task_text.setText("");
 
         }
-        /*   Or
-        tasks.add(new_task_name);
-        task_adapter.notifyDataSetChanged();
-
-        The difference is that the latter will add the items to the ArrayList, but the adapter will still hold a reference
-        to the original, unchanged list. Thus you have to notify the adapter that you changed the list so that the view can
-        refresh ListView with the new list.
-        Using adapter.add(),remove(), clear(), etc., will notify it automatically for you */
-
     }
 
-    private void setupListViewListener() {
+    public void setupListViewListener() {
         checklist_view.setOnItemLongClickListener(
                 new AdapterView.OnItemLongClickListener() {
                     @Override
@@ -87,7 +78,6 @@ public class Checklist_Screen extends AppCompatActivity {
 
                 });
     }
-
 
 }
 

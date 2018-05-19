@@ -20,7 +20,7 @@ import java.util.Locale;
 
 public class Timer_Screen extends AppCompatActivity {
 
-/**********************************VARIABLES*************************************************/
+    /**********************************VARIABLES*************************************************/
     private static final long COUNT_DOWN_INTERVAL_IN_MILLIS = 1000;
     private Button checklist_view;
     private Button calendar_view;
@@ -43,7 +43,7 @@ public class Timer_Screen extends AppCompatActivity {
     private DatabaseHelper pomodoro_database;
     private NotificationManager mNotificationManager;
 
-/****************************ACTIVITY CREATION***************************************************/
+    /****************************ACTIVITY CREATION***************************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -83,13 +83,13 @@ public class Timer_Screen extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (is_timer_running) {
-                    Toast.makeText(Main_Screen.this, "turn on notifs", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Timer_Screen.this, "turn on notifs", Toast.LENGTH_LONG).show();
                     NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+//                    mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
                     pauseTimer();
                 } else {
-                    Toast.makeText(Main_Screen.this, "turn off notifs", Toast.LENGTH_LONG).show();
-                    changeInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+                    Toast.makeText(Timer_Screen.this, "turn off notifs", Toast.LENGTH_LONG).show();
+//                    changeInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
                     startTimer();
 
                 }
@@ -106,7 +106,7 @@ public class Timer_Screen extends AppCompatActivity {
         settings_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent settings = new Intent(Main_Screen.this, Settings.class);
+                Intent settings = new Intent(Timer_Screen.this, Settings.class);
                 startActivity(settings);
             }
         });
@@ -114,9 +114,9 @@ public class Timer_Screen extends AppCompatActivity {
         updateCountDownText();
     }
 
-/************************HELPER FUNCTIONS*********************************************************/
+    /************************HELPER FUNCTIONS*********************************************************/
 
-    private void startTimer(){
+    private void startTimer() {
         count_down_timer = new CountDownTimer(time_left_in_millis, COUNT_DOWN_INTERVAL_IN_MILLIS) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -139,16 +139,16 @@ public class Timer_Screen extends AppCompatActivity {
         wifi.setWifiEnabled(false);
     }
 
-    private void pauseTimer(){
+    private void pauseTimer() {
         count_down_timer.cancel();
         is_timer_running = false;
         start_pause_btn.setText("Start");
         reset_btn.setVisibility(View.VISIBLE);
     }
 
-    private void resetTimer(){
+    private void resetTimer() {
         updateTimerValue();
-        is_timer_running= false;
+        is_timer_running = false;
         updateCountDownText();
         reset_btn.setVisibility(View.INVISIBLE);
         wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -156,7 +156,7 @@ public class Timer_Screen extends AppCompatActivity {
     }
 
 
-    private void updateCountDownText(){
+    private void updateCountDownText() {
         int minutes = (int) (time_left_in_millis / 1000) / 60;
         int seconds = (int) (time_left_in_millis / 1000) % 60;
 
@@ -165,7 +165,7 @@ public class Timer_Screen extends AppCompatActivity {
         timer_value.setText(time_left_formatted);
     }
 
-    private void updateTimerValue () {
+    private void updateTimerValue() {
         DatabaseHelper pomodoro_database = Database.getPomodoroDatabase();
         Cursor res = pomodoro_database.getAllData();
         if (res.getCount() == 0) {
@@ -174,7 +174,7 @@ public class Timer_Screen extends AppCompatActivity {
         }
         if (res.moveToNext()) {
             Toast.makeText(this, "Made Changes", Toast.LENGTH_LONG).show();
-            time_left_in_millis = Integer.parseInt(res.getString(1))* 60 * 1000;
+            time_left_in_millis = Integer.parseInt(res.getString(1)) * 60 * 1000;
         }
     }
 
@@ -183,7 +183,7 @@ public class Timer_Screen extends AppCompatActivity {
             if (mNotificationManager.isNotificationPolicyAccessGranted()) {
                 mNotificationManager.setInterruptionFilter(interruptionFilter);
             } else {
-                Toast.makeText(Main_Screen.this, "Policy not granted", Toast.LENGTH_LONG).show();
+                Toast.makeText(Timer_Screen.this, "Policy not granted", Toast.LENGTH_LONG).show();
             }
         }
     }
