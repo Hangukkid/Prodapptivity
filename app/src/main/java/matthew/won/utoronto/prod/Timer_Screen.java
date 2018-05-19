@@ -73,7 +73,7 @@ public class Timer_Screen extends AppCompatActivity {
 
         updateTimerValue();
         // Notification manager
-
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);;
 
         //Clicking the button will start the timer
         //If start is pressed, the button will change to "Pause"
@@ -84,12 +84,11 @@ public class Timer_Screen extends AppCompatActivity {
 
                 if (is_timer_running) {
                     Toast.makeText(Timer_Screen.this, "turn on notifs", Toast.LENGTH_LONG).show();
-                    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//                    mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+                    updateDNDSettings(NotificationManager.INTERRUPTION_FILTER_NONE);
                     pauseTimer();
                 } else {
                     Toast.makeText(Timer_Screen.this, "turn off notifs", Toast.LENGTH_LONG).show();
-//                    changeInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+                    updateDNDSettings(NotificationManager.INTERRUPTION_FILTER_NONE);
                     startTimer();
 
                 }
@@ -116,7 +115,7 @@ public class Timer_Screen extends AppCompatActivity {
 
     /************************HELPER FUNCTIONS*********************************************************/
 
-    private void startTimer() {
+    private void startTimer(){
         count_down_timer = new CountDownTimer(time_left_in_millis, COUNT_DOWN_INTERVAL_IN_MILLIS) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -139,16 +138,16 @@ public class Timer_Screen extends AppCompatActivity {
         wifi.setWifiEnabled(false);
     }
 
-    private void pauseTimer() {
+    private void pauseTimer(){
         count_down_timer.cancel();
         is_timer_running = false;
         start_pause_btn.setText("Start");
         reset_btn.setVisibility(View.VISIBLE);
     }
 
-    private void resetTimer() {
+    private void resetTimer(){
         updateTimerValue();
-        is_timer_running = false;
+        is_timer_running= false;
         updateCountDownText();
         reset_btn.setVisibility(View.INVISIBLE);
         wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -156,7 +155,7 @@ public class Timer_Screen extends AppCompatActivity {
     }
 
 
-    private void updateCountDownText() {
+    private void updateCountDownText(){
         int minutes = (int) (time_left_in_millis / 1000) / 60;
         int seconds = (int) (time_left_in_millis / 1000) % 60;
 
@@ -165,7 +164,7 @@ public class Timer_Screen extends AppCompatActivity {
         timer_value.setText(time_left_formatted);
     }
 
-    private void updateTimerValue() {
+    private void updateTimerValue () {
         DatabaseHelper pomodoro_database = Database.getPomodoroDatabase();
         Cursor res = pomodoro_database.getAllData();
         if (res.getCount() == 0) {
@@ -174,7 +173,7 @@ public class Timer_Screen extends AppCompatActivity {
         }
         if (res.moveToNext()) {
             Toast.makeText(this, "Made Changes", Toast.LENGTH_LONG).show();
-            time_left_in_millis = Integer.parseInt(res.getString(1)) * 60 * 1000;
+            time_left_in_millis = Integer.parseInt(res.getString(1))* 60 * 1000;
         }
     }
 
@@ -183,7 +182,8 @@ public class Timer_Screen extends AppCompatActivity {
             if (mNotificationManager.isNotificationPolicyAccessGranted()) {
                 mNotificationManager.setInterruptionFilter(interruptionFilter);
             } else {
-                Toast.makeText(Timer_Screen.this, "Policy not granted", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                startActivity(intent);
             }
         }
     }

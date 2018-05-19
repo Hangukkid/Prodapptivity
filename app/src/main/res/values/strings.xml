@@ -64,6 +64,13 @@
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
+    <!-- Information for Classes (trial run) -->
+    <string-array name="courses">
+        <item>Signals and Systems</item>
+        <item>Computer Organization</item>
+        <item>Engineering and Communications</item>
+    </string-array>
+
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
 
