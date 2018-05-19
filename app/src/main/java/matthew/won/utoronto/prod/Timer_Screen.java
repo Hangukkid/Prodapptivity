@@ -73,7 +73,7 @@ public class Timer_Screen extends AppCompatActivity {
 
         updateTimerValue();
         // Notification manager
-
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);;
 
         //Clicking the button will start the timer
         //If start is pressed, the button will change to "Pause"
@@ -83,13 +83,12 @@ public class Timer_Screen extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (is_timer_running) {
-                    Toast.makeText(Main_Screen.this, "turn on notifs", Toast.LENGTH_LONG).show();
-                    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+                    Toast.makeText(Timer_Screen.this, "turn on notifs", Toast.LENGTH_LONG).show();
+                    updateDNDSettings(NotificationManager.INTERRUPTION_FILTER_NONE);
                     pauseTimer();
                 } else {
-                    Toast.makeText(Main_Screen.this, "turn off notifs", Toast.LENGTH_LONG).show();
-                    changeInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
+                    Toast.makeText(Timer_Screen.this, "turn off notifs", Toast.LENGTH_LONG).show();
+                    updateDNDSettings(NotificationManager.INTERRUPTION_FILTER_NONE);
                     startTimer();
 
                 }
@@ -106,7 +105,7 @@ public class Timer_Screen extends AppCompatActivity {
         settings_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent settings = new Intent(Main_Screen.this, Settings.class);
+                Intent settings = new Intent(Timer_Screen.this, Settings.class);
                 startActivity(settings);
             }
         });
@@ -136,7 +135,7 @@ public class Timer_Screen extends AppCompatActivity {
         start_pause_btn.setText("Pause");
         reset_btn.setVisibility(View.INVISIBLE);
         wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifi.setWifiEnabled(false);
+//        wifi.setWifiEnabled(false);
     }
 
     private void pauseTimer(){
@@ -152,7 +151,7 @@ public class Timer_Screen extends AppCompatActivity {
         updateCountDownText();
         reset_btn.setVisibility(View.INVISIBLE);
         wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifi.setWifiEnabled(true);
+//        wifi.setWifiEnabled(true);
     }
 
 
@@ -183,7 +182,8 @@ public class Timer_Screen extends AppCompatActivity {
             if (mNotificationManager.isNotificationPolicyAccessGranted()) {
                 mNotificationManager.setInterruptionFilter(interruptionFilter);
             } else {
-                Toast.makeText(Main_Screen.this, "Policy not granted", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                startActivity(intent);
             }
         }
     }
