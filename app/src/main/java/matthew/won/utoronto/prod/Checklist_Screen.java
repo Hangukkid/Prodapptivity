@@ -24,7 +24,7 @@ public class Checklist_Screen extends AppCompatActivity {
 
     private Toolbar toolbar;
 
-    TaskDatabaseHelper taskDBHelper;
+    TaskDatabaseHelper task_db_helper;
 
     private ArrayList<String> checklist;
     private ArrayAdapter<String> task_adapter;
@@ -47,14 +47,15 @@ public class Checklist_Screen extends AppCompatActivity {
         checklist_view = (ListView) findViewById(R.id.checklist_view);
         new_task_text = (EditText) findViewById(R.id.new_task_text);
 
-        taskDBHelper = new TaskDatabaseHelper(this, null, null, 1);
+        task_db_helper = new TaskDatabaseHelper(this, null, null, 1);
 
-        checklist = taskDBHelper.loadDatabaseIntoArray();
+        checklist = task_db_helper.loadDatabaseIntoArray();
 
         //Need to add own "TextView" resource, not activity containing TextView
         task_adapter = new ArrayAdapter<String>(this, R.layout.checklist_item, checklist);
         checklist_view.setAdapter(task_adapter);
 
+        setupListViewListener();
     }
 
     public void addTaskOnClick(View view) {
@@ -66,16 +67,35 @@ public class Checklist_Screen extends AppCompatActivity {
     public void addTask(String new_task_string) {
         if (new_task_string != null && !new_task_string.isEmpty()) {
             Tasks task = new Tasks(new_task_string);
-            taskDBHelper.addTask(task);
+            task_db_helper.addTask(task);
             new_task_text.setText("");
 
             addTaskFromDatabase();
         }
     }
 
-    public void addTaskFromDatabase(){
-        String new_task_to_array = taskDBHelper.mostRecentTaskToString();
+    public void addTaskFromDatabase() {
+        String new_task_to_array = task_db_helper.mostRecentTaskToString();
         task_adapter.add(new_task_to_array);
+    }
+
+    // Attaches a long click listener to the listview
+    private void setupListViewListener() {
+        checklist_view.setOnItemLongClickListener(
+            new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapter,
+                                            View item, int pos, long id) {
+                    String task_to_delete = checklist.get(pos);
+                    task_db_helper.deleteTask(task_to_delete);
+
+                    checklist.remove(pos);
+                    task_adapter.notifyDataSetChanged();
+
+                    // Return true consumes the long click event (marks it handled)
+                    return true;
+                }
+        });
     }
 
 
