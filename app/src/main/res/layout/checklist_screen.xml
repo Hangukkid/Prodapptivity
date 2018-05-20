@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_gravity="right"
-            android:onClick="addTask"
+            android:onClick="addTaskOnClick"
             android:text="Add task" />
 
     </LinearLayout>
