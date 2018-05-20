@@ -49,7 +49,7 @@ public class Checklist_Screen extends AppCompatActivity {
 
         taskDBHelper = new TaskDatabaseHelper(this, null, null, 1);
 
-        checklist = new ArrayList<String>();
+        checklist = taskDBHelper.loadDatabaseIntoArray();
 
         //Need to add own "TextView" resource, not activity containing TextView
         task_adapter = new ArrayAdapter<String>(this, R.layout.checklist_item, checklist);
@@ -77,7 +77,6 @@ public class Checklist_Screen extends AppCompatActivity {
         String new_task_to_array = taskDBHelper.mostRecentTaskToString();
         task_adapter.add(new_task_to_array);
     }
-
 
 
 }

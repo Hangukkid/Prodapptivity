@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.content.Context;
 import android.content.ContentValues;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class TaskDatabaseHelper extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
 
@@ -66,8 +69,9 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper{
         return task_string;
     }
 
-    public String taskDatabaseToString(){
-        String task_string = "";
+    public ArrayList<String> loadDatabaseIntoArray(){
+        ArrayList<String> database_array = new ArrayList<String>();
+        String task_string;
         SQLiteDatabase task_db = getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_TASKS + " WHERE 1";
 
@@ -77,14 +81,13 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper{
 
         while (!c.isAfterLast()){
             if (c.getString(c.getColumnIndex("taskname"))!= null){
-                task_string += c.getString(c.getColumnIndex("taskname"));
-
-                task_string += "\n";
+                task_string = c.getString(c.getColumnIndex("taskname"));
+                database_array.add(task_string);
             }
             c.moveToNext();
         }
         task_db.close();
-        return task_string;
+        return database_array;
     }
 
 
