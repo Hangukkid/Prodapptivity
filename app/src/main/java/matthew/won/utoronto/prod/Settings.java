@@ -46,8 +46,9 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
                 boolean isUpdate = pomodoro_database.updateData(worklength.getText().toString(), breaklength.getText().toString(),
                                                 longbreaklength.getText().toString(), numofsessions.getText().toString());
-                if (isUpdate)
+                if (isUpdate) {
                     Toast.makeText(Settings.this, "Data Updated", Toast.LENGTH_LONG).show();
+                }
                 else
                     Toast.makeText(Settings.this, "Data Not Updated", Toast.LENGTH_LONG).show();
 
