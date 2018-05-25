@@ -1,11 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/task"
-    android:layout_width="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-    android:paddingLeft="6dp"
-    android:minHeight="?android:listPreferredItemHeight"
-    android:text="Task"
-    android:textSize="20sp" />
+    android:orientation="horizontal"
+    android:paddingTop="15dp"
+    android:paddingLeft="12dp">
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="1.25"
+        android:scaleY="1.25" />
+
+    <LinearLayout
+        android:id="@+id/task_name_and_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="7dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/task_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task name"
+            android:textColor="@android:color/black"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/task_description_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task description is placed over here and other things"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/deadline_and_subject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingRight="20dp">
+
+        <TextView
+            android:id="@+id/due_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="5/27"
+            android:textSize="17dp"
+            android:textAlignment="center"
+            android:paddingBottom="5dp"/>
+
+        <ImageView
+            android:id="@+id/myRectangleView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/rectangle"
+            android:background="@android:color/black"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>
