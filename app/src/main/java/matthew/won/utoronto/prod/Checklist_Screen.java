@@ -22,6 +22,9 @@ TODO: find out how to add items onto a listView without having to create an arra
 
 public class Checklist_Screen extends AppCompatActivity {
 
+    /**********************************VARIABLES*************************************************/
+
+
     private Toolbar toolbar;
 
     TaskDatabaseHelper task_db_helper;
@@ -31,6 +34,7 @@ public class Checklist_Screen extends AppCompatActivity {
     private ListView checklist_view;
     private EditText new_task_text;
 
+    /****************************ACTIVITY CREATION***************************************************/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +61,9 @@ public class Checklist_Screen extends AppCompatActivity {
 
         setupListViewListener();
     }
+
+    /************************HELPER FUNCTIONS*********************************************************/
+
 
     public void addTaskOnClick(View view) {
         String new_task_string = new_task_text.getText().toString();
