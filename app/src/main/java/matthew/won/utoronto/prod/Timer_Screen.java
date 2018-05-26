@@ -5,6 +5,11 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.wifi.WifiManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.app.ActionBar;
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -29,7 +34,6 @@ public class Timer_Screen extends AppCompatActivity {
     private Button checklist_view;
     private Button calendar_view;
 
-
     private Toolbar toolbar;
     private WifiManager wifi;
     private DatabaseHelper pomodoro_database;
@@ -49,6 +53,8 @@ public class Timer_Screen extends AppCompatActivity {
     private static int break_length;
     private static int long_break_length;
 
+    MediaPlayer media_player;
+
     /****************************ACTIVITY CREATION***************************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +63,18 @@ public class Timer_Screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timer_screen);
 
+        //Creating toolbar
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
 
-        timer_value = (TextView) findViewById(R.id.timer_value);
+        //Setting up media player
+//        media_player = MediaPlayer.create(getApplicationContext(), R.raw.see_you_again);
 
+        //Initializing views
+        timer_value = (TextView) findViewById(R.id.timer_value);
         start_pause_btn = (Button) findViewById(R.id.start_pause_btn);
         reset_btn = (Button) findViewById(R.id.reset_btn);
         settings_btn = (Button) findViewById(R.id.settings_btn);

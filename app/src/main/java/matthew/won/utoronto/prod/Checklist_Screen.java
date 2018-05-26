@@ -16,17 +16,25 @@ import java.util.ArrayList;
 //Website to create the list:
 //https://guides.codepath.com/android/Basic-Todo-App-Tutorial
 
+/*
+TODO: find out how to add items onto a listView without having to create an array everytime the activity starts
+ */
 
 public class Checklist_Screen extends AppCompatActivity {
 
+    /**********************************VARIABLES*************************************************/
+
+
     private Toolbar toolbar;
 
+    TaskDatabaseHelper task_db_helper;
 
-    private ArrayList<String> tasks;
+    private ArrayList<String> checklist;
     private ArrayAdapter<String> task_adapter;
     private ListView checklist_view;
     private EditText new_task_text;
 
+    /****************************ACTIVITY CREATION***************************************************/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,46 +46,65 @@ public class Checklist_Screen extends AppCompatActivity {
 
         android.support.v7.app.ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         checklist_view = (ListView) findViewById(R.id.checklist_view);
-        tasks = new ArrayList<String>();
+        new_task_text = (EditText) findViewById(R.id.new_task_text);
+
+        task_db_helper = new TaskDatabaseHelper(this, null, null, 1);
+
+        checklist = task_db_helper.loadDatabaseIntoArray();
 
         //Need to add own "TextView" resource, not activity containing TextView
-        task_adapter = new ArrayAdapter<String>(this, R.layout.checklist_item, tasks);
+        task_adapter = new ArrayAdapter<String>(this, R.layout.checklist_item, checklist);
         checklist_view.setAdapter(task_adapter);
 
         setupListViewListener();
-
-        //Used to prevent the keyboard from appearing when starting activity
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
-    public void addTask(View v) {
-        new_task_text = (EditText) findViewById(R.id.new_task_text);
-        String new_task_name = new_task_text.getText().toString();
-        if (new_task_name != null && !new_task_name.isEmpty()) {
-            task_adapter.add(new_task_name);
+    /************************HELPER FUNCTIONS*********************************************************/
+
+
+    public void addTaskOnClick(View view) {
+        String new_task_string = new_task_text.getText().toString();
+        addTask(new_task_string);
+    }
+
+
+    public void addTask(String new_task_string) {
+        if (new_task_string != null && !new_task_string.isEmpty()) {
+            Tasks task = new Tasks(new_task_string);
+            task_db_helper.addTask(task);
             new_task_text.setText("");
 
+            addTaskFromDatabase();
         }
     }
 
-    public void setupListViewListener() {
-        checklist_view.setOnItemLongClickListener(
-                new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> adapter,
-                                                   View item, int pos, long id) {
-                        // Remove the item within array at position
-                        tasks.remove(pos);
-                        // Refresh the adapter
-                        task_adapter.notifyDataSetChanged();
-                        // Return true consumes the long click event (marks it handled)
-                        return true;
-                    }
-
-                });
+    public void addTaskFromDatabase() {
+        String new_task_to_array = task_db_helper.mostRecentTaskToString();
+        task_adapter.add(new_task_to_array);
     }
+
+    // Attaches a long click listener to the listview
+    private void setupListViewListener() {
+        checklist_view.setOnItemLongClickListener(
+            new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapter,
+                                            View item, int pos, long id) {
+                    String task_to_delete = checklist.get(pos);
+                    task_db_helper.deleteTask(task_to_delete);
+
+                    checklist.remove(pos);
+                    task_adapter.notifyDataSetChanged();
+
+                    // Return true consumes the long click event (marks it handled)
+                    return true;
+                }
+        });
+    }
+
 
 }
 

@@ -8,13 +8,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.Timer;
-
 public class Calendar_Screen extends AppCompatActivity {
+
+    /**********************************VARIABLES*************************************************/
 
     private Toolbar toolbar;
     private Button checklist_view;
     private Button timer_view;
+
+    /****************************ACTIVITY CREATION***************************************************/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,4 +47,7 @@ public class Calendar_Screen extends AppCompatActivity {
         });
 
     }
+
+    /************************HELPER FUNCTIONS*********************************************************/
+
 }
