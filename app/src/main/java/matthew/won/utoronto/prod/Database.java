@@ -17,11 +17,11 @@ public final class Database {
 
     }
 
-    private static DatabaseHelper pomodoro_database;
-    public static DatabaseHelper getPomodoroDatabase() {
+    private static Database_Helper pomodoro_database;
+    public static Database_Helper getPomodoroDatabase() {
         return pomodoro_database;
     }
-    public static void setPomodoroDatabase (DatabaseHelper new_database) {
+    public static void setPomodoroDatabase (Database_Helper new_database) {
         pomodoro_database = new_database;
     }
 }
