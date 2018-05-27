@@ -45,10 +45,10 @@
                 android:value=".Calendar_Screen"/>
         </activity>
 
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings" />
-        <activity android:name=".Settings"></activity>
+        <!--<activity-->
+            <!--android:name=".SettingsActivity"-->
+            <!--android:label="@string/title_activity_settings" />-->
+        <!--<activity android:name=".Settings"></activity>-->
     </application>
 
 </manifest>

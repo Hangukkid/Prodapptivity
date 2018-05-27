@@ -5,11 +5,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.wifi.WifiManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.app.ActionBar;
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -23,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 enum session_state {idle_state, focus_state, break_state, long_break_state}
@@ -34,9 +30,10 @@ public class Timer_Screen extends AppCompatActivity {
     private Button checklist_view;
     private Button calendar_view;
 
+
     private Toolbar toolbar;
     private WifiManager wifi;
-    private DatabaseHelper pomodoro_database;
+    private Database_Helper<Pomodoro_Data> pomodoro_database;
     private NotificationManager mNotificationManager;
 
     private TextView timer_value;
@@ -79,19 +76,11 @@ public class Timer_Screen extends AppCompatActivity {
         reset_btn = (Button) findViewById(R.id.reset_btn);
         settings_btn = (Button) findViewById(R.id.settings_btn);
 
-        // Setting up Pomodoro database
-        pomodoro_database = new DatabaseHelper(this);
-        Cursor mCursor = pomodoro_database.getAllData();
-        if (!mCursor.moveToFirst())
-            pomodoro_database.insertData("25", "5", "15", "4");
-
-        Database.setPomodoroDatabase(pomodoro_database);
-
-        updateTimerValue();
         // Notification manager
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);;
 
         // Pomodoro State
+        setUpDatabase ();
         current_state = session_state.idle_state;
 
         //Clicking the button will start the timer
@@ -193,19 +182,24 @@ public class Timer_Screen extends AppCompatActivity {
     }
 
     private void updateTimerValue () {
-        DatabaseHelper pomodoro_database = Database.getPomodoroDatabase();
-        Cursor res = pomodoro_database.getAllData();
-        if (res.getCount() == 0) {
+        Database_Helper pomodoro_database = Database.getPomodoroDatabase();
+        ArrayList<Pomodoro_Data> res = pomodoro_database.loadDatabaseIntoArray();
+        Pomodoro_Data current_config = res.get(0);
+        if (res.size() == 0) {
             Toast.makeText(this, "Nothing Here", Toast.LENGTH_LONG).show();
             return;
         }
-        if (res.moveToNext()) {
+        else {
             //Toast.makeText(this, "Made Changes", Toast.LENGTH_LONG).show();
             // test values so that we don't wait for 1293428947 years
-            work_length = 1 * 6 * 1000;//Integer.parseInt(res.getString(1))* 60 * 1000;
-            break_length = 2 * 6 * 1000;//Integer.parseInt(res.getString(2))* 60 * 1000;
-            long_break_length = 3 * 6 * 1000;//Integer.parseInt(res.getString(3))* 60 * 1000;
-            number_of_sessions_left = 3;//Integer.parseInt(res.getString(4));
+//            work_length = 1 * 6 * 1000;
+//            break_length = 2 * 6 * 1000;
+//            long_break_length = 3 * 6 * 1000;
+//            number_of_sessions_left = 3;
+            work_length = current_config.focus_time * 60 * 1000;
+            break_length = current_config.break_time * 60 * 1000;
+            long_break_length = current_config.long_break_time * 60 * 1000;
+            number_of_sessions_left = current_config.number_of_sessoions;
             time_left_in_millis = work_length;
         }
     }
@@ -280,6 +274,22 @@ public class Timer_Screen extends AppCompatActivity {
         });
 
         return builder;
+    }
+
+    private void setUpDatabase () {
+        Pomodoro_Data thot = new Pomodoro_Data();
+        String database_columns = "WORKTIME INTEGER, BREAKTIME INTEGER, LONGBREAKTIME INTEGER, NUMOFSESSIONS INTEGER";
+        String database_name = "settings.db";
+        String table_name = "pomodoro_setting";
+        pomodoro_database = new Database_Helper(this, database_name, table_name, database_columns, thot);
+        ArrayList<Pomodoro_Data> list_of_times = pomodoro_database.loadDatabaseIntoArray();
+        if (list_of_times.size() == 0) {
+            Pomodoro_Data pd = new Pomodoro_Data(25, 5, 15, 4);
+            pomodoro_database.insert(pd);
+        }
+        Database.setPomodoroDatabase(pomodoro_database);
+
+        updateTimerValue();
     }
 }
 

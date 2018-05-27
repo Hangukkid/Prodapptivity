@@ -1,6 +1,5 @@
 package matthew.won.utoronto.prod;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class Settings extends AppCompatActivity {
     private Button pomodoro_save_btn;
@@ -18,7 +19,7 @@ public class Settings extends AppCompatActivity {
     private TextView longbreaklength;
     private TextView numofsessions;
 
-    public DatabaseHelper pomodoro_database;
+    public Database_Helper pomodoro_database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,11 @@ public class Settings extends AppCompatActivity {
         pomodoro_save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isUpdate = pomodoro_database.updateData(worklength.getText().toString(), breaklength.getText().toString(),
-                                                longbreaklength.getText().toString(), numofsessions.getText().toString());
+                Pomodoro_Data pd = new Pomodoro_Data(worklength.getText().toString(),
+                                                    breaklength.getText().toString(),
+                                                    longbreaklength.getText().toString(),
+                                                    numofsessions.getText().toString());
+                boolean isUpdate = pomodoro_database.update(pd, "1");//pomodoro_database.updateData(worklength.getText().toString(), breaklength.getText().toString(), longbreaklength.getText().toString(), numofsessions.getText().toString());
                 if (isUpdate) {
                     Toast.makeText(Settings.this, "Data Updated", Toast.LENGTH_LONG).show();
                 }
@@ -60,20 +64,18 @@ public class Settings extends AppCompatActivity {
         pomodoro_data_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Cursor res = pomodoro_database.getAllData();
-                if (res.getCount() == 0) {
+                ArrayList<Pomodoro_Data> res = pomodoro_database.loadDatabaseIntoArray();
+                if (res.size() == 0) {
                     showMessage("Error", "Nothing found");
                     return;
                 }
                 StringBuffer buffer = new StringBuffer();
-                while (res.moveToNext()) {
-                    buffer.append("Id : " + res.getString(0) + "\n");
-                    buffer.append("Work Session Length : " + res.getString(1) + "\n");
-                    buffer.append("Break Session Length : " + res.getString(2) + "\n");
-                    buffer.append("Long Break Session Length : " + res.getString(3) + "\n");
-                    buffer.append("Number of Sessions : " + res.getString(4) + "\n\n");
+                for (Pomodoro_Data t : res) {
+                    buffer.append("Work Session Length : " + Integer.toString(t.focus_time) + "\n");
+                    buffer.append("Break Session Length : " + Integer.toString(t.break_time) + "\n");
+                    buffer.append("Long Break Session Length : " + Integer.toString(t.long_break_time) + "\n");
+                    buffer.append("Number of Sessions : " + Integer.toString(t.number_of_sessoions) + "\n\n");
                 }
-
                 showMessage("Data", buffer.toString());
             }
         });
