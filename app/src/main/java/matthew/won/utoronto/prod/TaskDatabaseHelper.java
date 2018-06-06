@@ -49,7 +49,7 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper{
     /**********************************ADD TASKS*************************************************/
 
 
-    public void addTask(Tasks task){
+    public void addTask(Task task){
         ContentValues values = new ContentValues();
         values.put(COLUMN_TASKNAME, task.getTask_name());
 

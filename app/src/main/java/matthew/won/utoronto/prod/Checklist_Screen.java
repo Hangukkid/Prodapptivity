@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -30,7 +29,7 @@ public class Checklist_Screen extends AppCompatActivity {
     TaskDatabaseHelper task_db_helper;
 
     private ArrayList<Task> checklist;
-    private ArrayAdapter<Task> task_adapter;
+    private Checklist_Adapter task_adapter;
     private ListView checklist_view;
     private EditText new_task_text;
 
@@ -60,7 +59,7 @@ public class Checklist_Screen extends AppCompatActivity {
         checklist = checklist_database.loadDatabaseIntoArray();
 
         //Need to add own "TextView" resource, not activity containing TextView
-        task_adapter = new ArrayAdapter<Task>(this, R.layout.checklist_item, checklist);
+        task_adapter = new Checklist_Adapter(this, R.layout.checklist_item, checklist);
         checklist_view.setAdapter(task_adapter);
 
         setupListViewListener();
