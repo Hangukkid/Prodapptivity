@@ -89,7 +89,7 @@ public class Database_Helper<dataType extends Stringable<dataType>> extends SQLi
         }
         while (res.moveToNext()) {
             ArrayList<String> entry = new ArrayList<String>();
-            for (int i = 1; i <= COLUMN_NAMES_.length; i++) {
+            for (int i = 0; i <= COLUMN_NAMES_.length; i++) {
                 entry.add(res.getString(i));
             }
             dataType new_data = getInstanceOfDataType();
@@ -99,6 +99,26 @@ public class Database_Helper<dataType extends Stringable<dataType>> extends SQLi
 
         database.close();
         return database_array;
+    }
+
+    public dataType returnMostRecentEntry () {
+        dataType recentEntry = getInstanceOfDataType();
+        ArrayList<String> recentEntryArray = new ArrayList<String>();
+        SQLiteDatabase database = getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE 1";
+
+        Cursor c = database.rawQuery(query, null);
+
+        c.moveToLast();
+
+        if (c.getString(c.getColumnIndex("TASK"))!= null) {
+            recentEntryArray.add(c.getString(0));
+            recentEntryArray.add(c.getString(1));
+            recentEntryArray.add("");
+            recentEntryArray.add("");
+        }
+        recentEntry.unstringify(recentEntryArray);
+        return recentEntry;
     }
 
     public dataType getInstanceOfDataType() {
