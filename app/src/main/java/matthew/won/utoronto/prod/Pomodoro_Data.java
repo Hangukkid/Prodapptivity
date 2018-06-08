@@ -3,6 +3,7 @@ package matthew.won.utoronto.prod;
 import java.util.ArrayList;
 
 public class Pomodoro_Data implements Stringable<Pomodoro_Data>{
+    public String id;
     public int focus_time;
     public int break_time;
     public int long_break_time;
@@ -28,6 +29,7 @@ public class Pomodoro_Data implements Stringable<Pomodoro_Data>{
 
     public ArrayList<String> stringify () {
         ArrayList<String> data = new ArrayList<String>();
+        data.add(id);
         data.add(Integer.toString(focus_time));
         data.add(Integer.toString(break_time));
         data.add(Integer.toString(long_break_time));
@@ -36,10 +38,11 @@ public class Pomodoro_Data implements Stringable<Pomodoro_Data>{
     }
 
     public void unstringify (ArrayList<String> data) {
-        this.focus_time = Integer.parseInt(data.get(0));
-        this.break_time = Integer.parseInt(data.get(1));
-        this.long_break_time = Integer.parseInt(data.get(2));
-        this.number_of_sessoions = Integer.parseInt(data.get(3));
+        this.id = data.get(0);
+        this.focus_time = Integer.parseInt(data.get(1));
+        this.break_time = Integer.parseInt(data.get(2));
+        this.long_break_time = Integer.parseInt(data.get(3));
+        this.number_of_sessoions = Integer.parseInt(data.get(4));
     }
 
     public Pomodoro_Data newInstance() {

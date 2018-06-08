@@ -12,6 +12,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import matthew.won.utoronto.prod.Useless.TaskDatabaseHelper;
+
 //Website to create the list:
 //https://guides.codepath.com/android/Basic-Todo-App-Tutorial
 
@@ -34,6 +36,7 @@ public class Checklist_Screen extends AppCompatActivity {
     private EditText new_task_text;
 
     private Database_Helper<Task> checklist_database;
+    private Database_Helper<Subject> subject_database;
 
     /****************************ACTIVITY CREATION***************************************************/
 
@@ -52,9 +55,7 @@ public class Checklist_Screen extends AppCompatActivity {
         checklist_view = (ListView) findViewById(R.id.checklist_view);
         new_task_text = (EditText) findViewById(R.id.new_task_text);
 
-        //
-        //task_db_helper = new TaskDatabaseHelper(this, null, null, 1);
-        setUpDatabase();
+        setupDatabase();
 
         checklist = checklist_database.loadDatabaseIntoArray();
 
@@ -71,7 +72,7 @@ public class Checklist_Screen extends AppCompatActivity {
     public void addTaskOnClick(View view) {
         String new_task_string = new_task_text.getText().toString();
         if (new_task_string != null && !new_task_string.isEmpty()) {
-            Task new_task = new Task(new_task_string, "");
+            Task new_task = new Task(new_task_string, "for idiots", "now", "subject");
             checklist_database.insert(new_task);
             new_task_text.setText("");
             //
@@ -80,21 +81,6 @@ public class Checklist_Screen extends AppCompatActivity {
             task_adapter.add(new_task);
         }
     }
-
-//    public void addTask(String new_task_string) {
-//        if (new_task_string != null && !new_task_string.isEmpty()) {
-//            Task task = new Task(new_task_string);
-//            task_db_helper.addTask(task);
-//            new_task_text.setText("");
-//
-//            addTaskFromDatabase();
-//        }
-//    }
-
-//    public void addTaskFromDatabase(String ) {
-//        String new_task_to_array = task_db_helper.mostRecentTaskToString();
-//        task_adapter.add(new_task_to_array);
-//    }
 
     // Attaches a long click listener to the listview
     private void setupListViewListener() {
@@ -116,13 +102,35 @@ public class Checklist_Screen extends AppCompatActivity {
         });
     }
 
-    private void setUpDatabase () {
+    private void setupDatabase () {
         Task thot = new Task();
-        String database_columns = "TASK TEXT";
-        String database_name = "work.db";
+        String database_columns = "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE TEXT, SUBJECT TEXT";
+        String database_name = "homework.db";
         String table_name = "tasks";
         checklist_database = new Database_Helper(this, database_name, table_name, database_columns, thot);
         //Database.setPomodoroDatabase(pomodoro_database);
+
+        setupSubjects();
+
+    }
+
+    private void setupSubjects () {
+        Subject s = new Subject();
+
+        String database_name = "courses.db";
+        String database_columns = "SUBJECT_NAME TEXT, IMPORTANCE REAL, COLOUR TEXT";
+        String table_name = "subjects";
+
+        subject_database = new Database_Helper(this, database_name, table_name, database_columns, s);
+        if (subject_database.isDatabaseEmpty()) {
+            Subject math = new Subject("Calculus", "5", "Blue");
+            Subject programming = new Subject("Programming Fundamentals", "8", "Black");
+            Subject asm = new Subject("Computer Organization", "3", "Red");
+
+            subject_database.insert(math);
+            subject_database.insert(programming);
+            subject_database.insert(asm);
+        }
     }
 
 }

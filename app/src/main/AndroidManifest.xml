@@ -45,6 +45,15 @@
                 android:value=".Calendar_Screen"/>
         </activity>
 
+        <activity
+            android:name=".Settings"
+            android:label="Oh Settings"
+            android:parentActivityName=".Timer_Screen">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Timer_Screen"/>
+        </activity>
         <!--<activity-->
             <!--android:name=".SettingsActivity"-->
             <!--android:label="@string/title_activity_settings" />-->

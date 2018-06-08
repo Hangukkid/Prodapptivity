@@ -22,9 +22,15 @@ public class Database_Helper<dataType extends Stringable<dataType>> extends SQLi
     public Database_Helper (Context context, String database_name, String table_name,
                             String column_names, dataType type_) {
         super (context, database_name,null, DATABASE_VERSION);
+
+        // deletes previous versions of database.
+//        boolean b = context.deleteDatabase(database_name);
         DATABASE_NAME = database_name;
         TABLE_NAME = table_name;
         COLUMN_NAMES = column_names;
+
+        // Names are given as they would be put into the string.
+        // Want to separate name from type to store column names
         COLUMN_NAMES_ = COLUMN_NAMES.split(",");
         for (int i = 0; i < COLUMN_NAMES_.length; i++) {
             COLUMN_NAMES_[i] = COLUMN_NAMES_[i].trim().split(" ")[0];
@@ -49,7 +55,7 @@ public class Database_Helper<dataType extends Stringable<dataType>> extends SQLi
         ContentValues values = new ContentValues();
         ArrayList<String> data_to_insert = some_data.stringify();
         for (int i = 0; i < COLUMN_NAMES_.length; i++) {
-            values.put(COLUMN_NAMES_[i], data_to_insert.get(i));
+            values.put(COLUMN_NAMES_[i], data_to_insert.get(i+1));
         }
         SQLiteDatabase database = getWritableDatabase();
         long result = database.insert(TABLE_NAME, null, values);
@@ -69,7 +75,7 @@ public class Database_Helper<dataType extends Stringable<dataType>> extends SQLi
         values.put ("ID", id_);
 
         for (int i = 0; i < COLUMN_NAMES_.length; i++) {
-            values.put(COLUMN_NAMES_[i], data_to_update.get(i));
+            values.put(COLUMN_NAMES_[i], data_to_update.get(i+1));
         }
         SQLiteDatabase database = getWritableDatabase();
 
@@ -111,14 +117,24 @@ public class Database_Helper<dataType extends Stringable<dataType>> extends SQLi
 
         c.moveToLast();
 
-        if (c.getString(c.getColumnIndex("TASK"))!= null) {
-            recentEntryArray.add(c.getString(0));
-            recentEntryArray.add(c.getString(1));
-            recentEntryArray.add("");
-            recentEntryArray.add("");
+//        if (c.getString(c.getColumnIndex("TASK"))!= null) {
+//            recentEntryArray.add(c.getString(0));
+//            recentEntryArray.add(c.getString(1));
+//            recentEntryArray.add("");
+//            recentEntryArray.add("");
+//        }
+
+        for (int i = 0; i <= COLUMN_NAMES_.length; i++) {
+            recentEntryArray.add(c.getString(i));
         }
+
         recentEntry.unstringify(recentEntryArray);
         return recentEntry;
+    }
+
+    public boolean isDatabaseEmpty() {
+        ArrayList<dataType> database_array = loadDatabaseIntoArray();
+        return database_array.isEmpty();
     }
 
     public dataType getInstanceOfDataType() {
