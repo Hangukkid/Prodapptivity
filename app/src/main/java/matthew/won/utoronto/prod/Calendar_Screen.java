@@ -1,51 +1,41 @@
 package matthew.won.utoronto.prod;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 
-public class Calendar_Screen extends AppCompatActivity {
+public class Calendar_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
 
-    private Toolbar toolbar;
-    private Button checklist_view;
-    private Button timer_view;
-
     /****************************ACTIVITY CREATION***************************************************/
 
+    public static Calendar_Screen newInstance(){
+        Calendar_Screen fragment = new Calendar_Screen();
+
+        //not for use yet
+        Bundle args = new Bundle ();
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.calendar_screen);
 
-        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
 
-        checklist_view = (Button) findViewById(R.id.checklist_view);
-        timer_view = (Button) findViewById(R.id.timer_view);
+    }
 
-        checklist_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //All activities must be declared in manifest!!
-                Intent switch_to_checklist = new Intent(Calendar_Screen.this, Checklist_Screen.class);
-                startActivity(switch_to_checklist);
-            }
-        });
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.calendar_screen, container, false);
 
-        timer_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent switch_to_timer_screen = new Intent(Calendar_Screen.this, Timer_Screen.class);
-                startActivity(switch_to_timer_screen);
-            }
-        });
 
+
+        return view;
     }
 
     /************************HELPER FUNCTIONS*********************************************************/

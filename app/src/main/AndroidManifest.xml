@@ -17,40 +17,37 @@
 
 
         <activity
-            android:name=".Calendar_Screen"
-            android:label="Oh Calendar">
+            android:name=".View_Pager_Screen"
+            android:label="Oh View Pager Screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".Calendar_Screen"
+            android:label="Oh Calendar">
+
         </activity>
         <activity
             android:name=".Checklist_Screen"
-            android:label="Oh Checklist"
-            android:parentActivityName=".Calendar_Screen">
+            android:label="Oh Checklist">
 
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Calendar_Screen"/>
         </activity>
 
         <activity
             android:name=".Timer_Screen"
-            android:label="Oh Timer"
-            android:parentActivityName=".Calendar_Screen">
+            android:label="Oh Timer">
 
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Calendar_Screen"/>
         </activity>
 
         <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Calendar_Screen"/>
+
         </activity>
 
     </application>

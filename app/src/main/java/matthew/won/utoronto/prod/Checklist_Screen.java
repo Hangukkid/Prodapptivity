@@ -1,11 +1,12 @@
 package matthew.won.utoronto.prod;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -19,12 +20,10 @@ import java.util.ArrayList;
 TODO: find out how to add items onto a listView without having to create an array everytime the activity starts
  */
 
-public class Checklist_Screen extends AppCompatActivity {
+public class Checklist_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
 
-
-    private Toolbar toolbar;
 
     TaskDatabaseHelper task_db_helper;
 
@@ -37,20 +36,26 @@ public class Checklist_Screen extends AppCompatActivity {
 
     /****************************ACTIVITY CREATION***************************************************/
 
+    public static Checklist_Screen newInstance(){
+        Checklist_Screen fragment = new Checklist_Screen();
+
+        //Not to be used yet
+        Bundle args = new Bundle();
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.checklist_screen);
+    }
 
-        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.checklist_screen, container, false);
 
-        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        checklist_view = (ListView) findViewById(R.id.checklist_view);
-        new_task_text = (EditText) findViewById(R.id.new_task_text);
+        checklist_view = (ListView) view.findViewById(R.id.checklist_view);
+        new_task_text = (EditText) view.findViewById(R.id.new_task_text);
 
         //
         //task_db_helper = new TaskDatabaseHelper(this, null, null, 1);
@@ -58,11 +63,17 @@ public class Checklist_Screen extends AppCompatActivity {
 
         checklist = checklist_database.loadDatabaseIntoArray();
 
-        //Need to add own "TextView" resource, not activity containing TextView
-        task_adapter = new Checklist_Adapter(this, R.layout.checklist_item, checklist);
+        //Replaced 'this' context with 'getActivity()' for fragments
+        task_adapter = new Checklist_Adapter(getActivity(), R.layout.checklist_item, checklist);
         checklist_view.setAdapter(task_adapter);
 
         setupListViewListener();
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
     }
 
     /************************HELPER FUNCTIONS*********************************************************/
@@ -81,20 +92,7 @@ public class Checklist_Screen extends AppCompatActivity {
         }
     }
 
-//    public void addTask(String new_task_string) {
-//        if (new_task_string != null && !new_task_string.isEmpty()) {
-//            Task task = new Task(new_task_string);
-//            task_db_helper.addTask(task);
-//            new_task_text.setText("");
-//
-//            addTaskFromDatabase();
-//        }
-//    }
 
-//    public void addTaskFromDatabase(String ) {
-//        String new_task_to_array = task_db_helper.mostRecentTaskToString();
-//        task_adapter.add(new_task_to_array);
-//    }
 
     // Attaches a long click listener to the listview
     private void setupListViewListener() {
@@ -121,7 +119,7 @@ public class Checklist_Screen extends AppCompatActivity {
         String database_columns = "TASK TEXT";
         String database_name = "work.db";
         String table_name = "tasks";
-        checklist_database = new Database_Helper(this, database_name, table_name, database_columns, thot);
+        checklist_database = new Database_Helper(getActivity(), database_name, table_name, database_columns, thot);
         //Database.setPomodoroDatabase(pomodoro_database);
     }
 
