@@ -14,7 +14,7 @@ import android.view.WindowManager;
  * Fix toolbar back button
  * Media Player
  * Other UI stuff?
- *
+ * Adding animations to add tasks is super easy
  */
 
 public class View_Pager_Screen extends AppCompatActivity {
