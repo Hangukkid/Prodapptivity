@@ -12,7 +12,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import matthew.won.utoronto.prod.Useless.TaskDatabaseHelper;
+import matthew.won.utoronto.prod.Database.Datatype_SQL;
+import matthew.won.utoronto.prod.Database.SQL_Helper;
 
 //Website to create the list:
 //https://guides.codepath.com/android/Basic-Todo-App-Tutorial
@@ -27,8 +28,6 @@ public class Checklist_Screen extends AppCompatActivity {
 
 
     private Toolbar toolbar;
-
-    TaskDatabaseHelper task_db_helper;
 
     private ArrayList<Task> checklist;
     private Checklist_Adapter task_adapter;
@@ -105,12 +104,16 @@ public class Checklist_Screen extends AppCompatActivity {
 
     private void setupDatabase () {
         Task thot = new Task();
+        Subject that = new Subject();
         String database_name = "homework.db";
-        String table_name = "tasks";
+        String task_table_name = "tasks";
+        String subject_table_name = "subjects";
 
-        checklist_sql = new Datatype_SQL<Task>(table_name, thot);
+        checklist_sql = new Datatype_SQL<Task>(task_table_name, thot);
+        subject_sql = new Datatype_SQL<Subject>(subject_table_name, that);
         work_database = new SQL_Helper(database_name, this);
 
+        work_database.addTable(subject_sql);
         work_database.addTable(checklist_sql);
 
         work_database.createDatabase();

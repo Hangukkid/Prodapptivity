@@ -1,8 +1,8 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Database;
 
 import java.util.ArrayList;
 
-interface Stringable<dataType> {
+public interface Stringable<dataType> {
     // Be able to turn all of its parameters into strings
     ArrayList<String> stringify();
 

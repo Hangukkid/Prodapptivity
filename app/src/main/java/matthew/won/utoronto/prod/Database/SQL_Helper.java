@@ -1,4 +1,4 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Database;
 
 import android.content.Context;
 import android.util.Pair;
@@ -15,7 +15,7 @@ public class SQL_Helper {
     private boolean foreign_keys;
     private HashMap<String, String[]> table_name_to_column_names;
 
-    SQL_Helper (String database_name, Context context) {
+    public SQL_Helper (String database_name, Context context) {
         this.database_name = database_name;
         this.Query_List = new Pair<ArrayList<String>, ArrayList<String>>(new ArrayList<String>(), new ArrayList<String>());
         this.context = context;

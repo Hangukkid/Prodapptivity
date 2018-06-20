@@ -2,7 +2,9 @@ package matthew.won.utoronto.prod;
 
 import java.util.ArrayList;
 
-public class Task implements Stringable<Task>{
+import matthew.won.utoronto.prod.Database.Stringable;
+
+public class Task implements Stringable<Task> {
     private String id;
     private String task_name;
     private String description;
@@ -59,7 +61,7 @@ public class Task implements Stringable<Task>{
     }
 
     public String getDatabaseForum() {
-        return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE TEXT, SUBJECT TEXT";
+        return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE TEXT, SUBJECT TEXT";//, SUBJECT_ID INTEGER NOT NULL, FOREIGN KEY (SUBJECT_ID) REFERENCES subjects(ID) ON DELETE CASCADE";
     }
 
 }

@@ -2,7 +2,9 @@ package matthew.won.utoronto.prod;
 
 import java.util.ArrayList;
 
-public class Pomodoro_Data implements Stringable<Pomodoro_Data>{
+import matthew.won.utoronto.prod.Database.Stringable;
+
+public class Pomodoro_Data implements Stringable<Pomodoro_Data> {
     public String id;
     public int focus_time;
     public int break_time;

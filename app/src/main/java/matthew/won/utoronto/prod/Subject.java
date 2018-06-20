@@ -2,7 +2,9 @@ package matthew.won.utoronto.prod;
 
 import java.util.ArrayList;
 
-public class Subject implements Stringable<Subject>{
+import matthew.won.utoronto.prod.Database.Stringable;
+
+public class Subject implements Stringable<Subject> {
     private String id;
     private String subject_name;
     private String importance;
@@ -11,7 +13,7 @@ public class Subject implements Stringable<Subject>{
 //    private String start_time;
 //    private String end_time;
 
-    Subject(){
+    Subject() {
 
     }
 

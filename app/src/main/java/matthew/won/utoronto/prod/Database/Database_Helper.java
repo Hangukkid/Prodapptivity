@@ -1,4 +1,4 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Database;
 
 import android.content.ContentValues;
 import android.content.Context;

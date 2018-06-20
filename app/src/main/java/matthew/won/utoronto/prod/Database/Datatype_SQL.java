@@ -1,4 +1,4 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Database;
 
 public class Datatype_SQL<dataType extends Stringable<dataType>> {
 
@@ -8,11 +8,7 @@ public class Datatype_SQL<dataType extends Stringable<dataType>> {
 
     private dataType type;
 
-    Datatype_SQL() {
-
-    }
-
-    Datatype_SQL(String table_name, dataType type) {
+    public Datatype_SQL(String table_name, dataType type) {
         TABLE_NAME = table_name;
         this.type = type;
         setupTables();
