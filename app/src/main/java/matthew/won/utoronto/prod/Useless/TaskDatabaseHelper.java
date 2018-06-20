@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
-import matthew.won.utoronto.prod.Task;
+import matthew.won.utoronto.prod.Datatypes.Task;
 
 public class TaskDatabaseHelper extends SQLiteOpenHelper{
 

@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
+import matthew.won.utoronto.prod.Datatypes.Subject;
+import matthew.won.utoronto.prod.Datatypes.Task;
 
 //Website to create the list:
 //https://guides.codepath.com/android/Basic-Todo-App-Tutorial

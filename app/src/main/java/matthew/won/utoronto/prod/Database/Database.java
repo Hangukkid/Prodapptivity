@@ -1,6 +1,6 @@
 package matthew.won.utoronto.prod.Database;
 
-import matthew.won.utoronto.prod.Pomodoro_Data;
+import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
 
 // A class that contains instances of databases and other data
 public final class Database {

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import matthew.won.utoronto.prod.Database.Database;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
+import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
 
 public class Settings extends AppCompatActivity {
     private Button pomodoro_save_btn;

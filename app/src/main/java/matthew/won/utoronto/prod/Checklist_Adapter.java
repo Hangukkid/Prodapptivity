@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import matthew.won.utoronto.prod.Datatypes.Task;
+
 public class Checklist_Adapter extends ArrayAdapter<Task> {
 
     public Checklist_Adapter(Context context, int resource, ArrayList<Task> objects){
