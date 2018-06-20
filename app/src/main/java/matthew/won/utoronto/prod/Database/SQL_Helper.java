@@ -8,32 +8,38 @@ import java.util.HashMap;
 
 public class SQL_Helper {
 
-    public ArrayList<Pair<String, String>> Query_List;
+    public Pair<ArrayList<String>, ArrayList<String>> Query_List;
     public String database_name;
     public Database_Helper database;
     private Context context;
+    private boolean foreign_keys;
     private HashMap<String, String[]> table_name_to_column_names;
 
     SQL_Helper (String database_name, Context context) {
         this.database_name = database_name;
-        this.Query_List = new ArrayList<Pair<String, String>>();
+        this.Query_List = new Pair<ArrayList<String>, ArrayList<String>>(new ArrayList<String>(), new ArrayList<String>());
         this.context = context;
         this.table_name_to_column_names = new HashMap<String, String[]>();
+        foreign_keys = false;
     }
 
     public void createDatabase () {
+        if (foreign_keys) {
+            Query_List.first.add("PRAGMA foreign_keys = ON;");
+        }
         database = new Database_Helper(context, database_name, Query_List);
     }
 
     public <T extends Stringable<T>> void addTable (Datatype_SQL<T> data) {
         String Query = "CREATE TABLE " + data.TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + data.COLUMN_NAMES + ");";
         String Update_Query = "DROP TABLE IF EXISTS " + data.TABLE_NAME;
-        Pair<String,String> q = new Pair<String, String> (Query, Update_Query);
-        Query_List.add(q);
+        Query_List.first.add(Query);
+        Query_List.second.add(Update_Query);
         table_name_to_column_names.put(data.TABLE_NAME, data.COLUMN_NAMES_);
 
     }
 
+    // Insert data point and table name
     public <T extends Stringable<T>> boolean insertData (T data, String table_name) {
         // Get data from data and turn it into an array
         return database.insert(data.stringify(), table_name, table_name_to_column_names.get(table_name));
@@ -81,5 +87,9 @@ public class SQL_Helper {
 
     public boolean isDatabaseEmpty(String table_name) {
         return database.isDatabaseEmpty(table_name);
+    }
+
+    public void enableForeignKeys () {
+        foreign_keys = true;
     }
 }

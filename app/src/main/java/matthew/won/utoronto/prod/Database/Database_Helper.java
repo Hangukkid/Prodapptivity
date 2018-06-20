@@ -16,9 +16,9 @@ public class Database_Helper extends SQLiteOpenHelper {
 
     private String DATABASE_NAME;
 
-    private ArrayList<Pair<String,String>> Query;
+    private Pair<ArrayList<String>, ArrayList<String>> Query;
 
-    public Database_Helper (Context context, String database_name, ArrayList<Pair<String,String>> query) {
+    public Database_Helper (Context context, String database_name, Pair<ArrayList<String>, ArrayList<String>> query) {
         super (context, database_name,null, 1);
 
         // deletes previous versions of database.
@@ -30,18 +30,14 @@ public class Database_Helper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate (SQLiteDatabase database){
-//        String Query = "CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAMES + ");";
-//        database.execSQL(Query);
-        for (Pair<String,String> query : Query)
-            database.execSQL(query.first);
+        for (String query : Query.first)
+            database.execSQL(query);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion){
-//        database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-//        onCreate(database);
-        for (Pair<String,String> query : Query)
-            database.execSQL(query.second);
+        for (String query : Query.second)
+            database.execSQL(query);
     }
 
     public boolean insert (ArrayList<String> data, String table_name, String[] column_names) {

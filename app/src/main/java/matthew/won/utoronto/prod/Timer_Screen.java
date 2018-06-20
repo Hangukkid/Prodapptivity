@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +50,11 @@ public class Timer_Screen extends AppCompatActivity {
     private static int break_length;
     private static int long_break_length;
 
-    MediaPlayer media_player;
+    private ProgressBar progress_bar;
+
+
+
+
 
     /****************************ACTIVITY CREATION***************************************************/
     @Override
@@ -75,6 +79,13 @@ public class Timer_Screen extends AppCompatActivity {
         start_pause_btn = (Button) findViewById(R.id.start_pause_btn);
         reset_btn = (Button) findViewById(R.id.reset_btn);
         settings_btn = (Button) findViewById(R.id.settings_btn);
+
+
+        progress_bar = (ProgressBar) findViewById(R.id.progress_bar);
+
+
+
+
 
         // Notification manager
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);;
@@ -114,12 +125,16 @@ public class Timer_Screen extends AppCompatActivity {
         });
         updateTimerValue();
         updateCountDownText();
+//
+
     }
 
     /************************HELPER FUNCTIONS*********************************************************/
 
     private void startTimer(){
         count_down_timer = new CountDownTimer(time_left_in_millis, COUNT_DOWN_INTERVAL_IN_MILLIS) {
+
+
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -181,6 +196,10 @@ public class Timer_Screen extends AppCompatActivity {
         String time_left_formatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
 
         timer_value.setText(time_left_formatted);
+
+        //Need access to the starting time
+        long starting_time = time_left_in_millis;
+        progress_bar.setProgress((int) (time_left_in_millis/starting_time)*100);
     }
 
     private void updateTimerValue () {
