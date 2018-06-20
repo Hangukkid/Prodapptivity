@@ -57,4 +57,9 @@ public class Task implements Stringable<Task>{
     public Task newInstance() {
         return new Task();
     }
+
+    public String getDatabaseForum() {
+        return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE TEXT, SUBJECT TEXT";
+    }
+
 }

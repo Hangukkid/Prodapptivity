@@ -48,4 +48,8 @@ public class Pomodoro_Data implements Stringable<Pomodoro_Data>{
     public Pomodoro_Data newInstance() {
         return new Pomodoro_Data();
     }
+
+    public String getDatabaseForum() {
+        return "WORKTIME INTEGER, BREAKTIME INTEGER, LONGBREAKTIME INTEGER, NUMOFSESSIONS INTEGER";
+    }
 }

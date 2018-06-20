@@ -35,8 +35,9 @@ public class Checklist_Screen extends AppCompatActivity {
     private ListView checklist_view;
     private EditText new_task_text;
 
-    private Database_Helper<Task> checklist_database;
-    private Database_Helper<Subject> subject_database;
+    private SQL_Helper work_database;
+    private Datatype_SQL<Task> checklist_sql;
+    private Datatype_SQL<Subject> subject_sql;
 
     /****************************ACTIVITY CREATION***************************************************/
 
@@ -57,7 +58,7 @@ public class Checklist_Screen extends AppCompatActivity {
 
         setupDatabase();
 
-        checklist = checklist_database.loadDatabaseIntoArray();
+        checklist = work_database.loadDatabase(checklist_sql);
 
         //Need to add own "TextView" resource, not activity containing TextView
         task_adapter = new Checklist_Adapter(this, R.layout.checklist_item, checklist);
@@ -73,10 +74,10 @@ public class Checklist_Screen extends AppCompatActivity {
         String new_task_string = new_task_text.getText().toString();
         if (new_task_string != null && !new_task_string.isEmpty()) {
             Task new_task = new Task(new_task_string, "for idiots", "now", "subject");
-            checklist_database.insert(new_task);
+            work_database.insertData(new_task, checklist_sql.TABLE_NAME);
             new_task_text.setText("");
             //
-            new_task = checklist_database.returnMostRecentEntry();
+            new_task = work_database.getMostRecent(checklist_sql);
             // add task to list
             task_adapter.add(new_task);
         }
@@ -91,7 +92,7 @@ public class Checklist_Screen extends AppCompatActivity {
                                             View item, int pos, long id) {
                     Task task_to_delete = checklist.get(pos);
                     //task_db_helper.deleteTask(task_to_delete);
-                    checklist_database.delete(task_to_delete.getID());
+                    work_database.deleteData(task_to_delete.getID(), checklist_sql.TABLE_NAME);
 
                     checklist.remove(pos);
                     task_adapter.notifyDataSetChanged();
@@ -104,33 +105,19 @@ public class Checklist_Screen extends AppCompatActivity {
 
     private void setupDatabase () {
         Task thot = new Task();
-        String database_columns = "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE TEXT, SUBJECT TEXT";
         String database_name = "homework.db";
         String table_name = "tasks";
-        checklist_database = new Database_Helper(this, database_name, table_name, database_columns, thot);
+
+        checklist_sql = new Datatype_SQL<Task>(table_name, thot);
+        work_database = new SQL_Helper(database_name, this);
+
+        work_database.addTable(checklist_sql);
+
+        work_database.createDatabase();
         //Database.setPomodoroDatabase(pomodoro_database);
 
-        setupSubjects();
+//        setupSubjects();
 
-    }
-
-    private void setupSubjects () {
-        Subject s = new Subject();
-
-        String database_name = "courses.db";
-        String database_columns = "SUBJECT_NAME TEXT, IMPORTANCE REAL, COLOUR TEXT";
-        String table_name = "subjects";
-
-        subject_database = new Database_Helper(this, database_name, table_name, database_columns, s);
-        if (subject_database.isDatabaseEmpty()) {
-            Subject math = new Subject("Calculus", "5", "Blue");
-            Subject programming = new Subject("Programming Fundamentals", "8", "Black");
-            Subject asm = new Subject("Computer Organization", "3", "Red");
-
-            subject_database.insert(math);
-            subject_database.insert(programming);
-            subject_database.insert(asm);
-        }
     }
 
 }

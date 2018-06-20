@@ -3,147 +3,121 @@ package matthew.won.utoronto.prod;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Pair;
 
 import java.util.ArrayList;
 
 
-public class Database_Helper<dataType extends Stringable<dataType>> extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+public class Database_Helper extends SQLiteOpenHelper {
+    private int DATABASE_VERSION = 1;
 
     private String DATABASE_NAME;
-    private String TABLE_NAME;
-    private String COLUMN_NAMES;
-    private String[] COLUMN_NAMES_;
 
-    private dataType type;
+    private ArrayList<Pair<String,String>> Query;
 
-    public Database_Helper (Context context, String database_name, String table_name,
-                            String column_names, dataType type_) {
-        super (context, database_name,null, DATABASE_VERSION);
+    public Database_Helper (Context context, String database_name, ArrayList<Pair<String,String>> query) {
+        super (context, database_name,null, 1);
 
         // deletes previous versions of database.
 //        boolean b = context.deleteDatabase(database_name);
+
+        Query = query;
         DATABASE_NAME = database_name;
-        TABLE_NAME = table_name;
-        COLUMN_NAMES = column_names;
-
-        // Names are given as they would be put into the string.
-        // Want to separate name from type to store column names
-        COLUMN_NAMES_ = COLUMN_NAMES.split(",");
-        for (int i = 0; i < COLUMN_NAMES_.length; i++) {
-            COLUMN_NAMES_[i] = COLUMN_NAMES_[i].trim().split(" ")[0];
-        }
-
-        type = type_;
     }
 
     @Override
     public void onCreate (SQLiteDatabase database){
-        String query = "CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAMES + ");";
-        database.execSQL(query);
+//        String Query = "CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAMES + ");";
+//        database.execSQL(Query);
+        for (Pair<String,String> query : Query)
+            database.execSQL(query.first);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase task_db, int oldVersion, int newVersion){
-        task_db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        onCreate(task_db);
+    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion){
+//        database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+//        onCreate(database);
+        for (Pair<String,String> query : Query)
+            database.execSQL(query.second);
     }
 
-    public boolean insert (dataType some_data) {
+    public boolean insert (ArrayList<String> data, String table_name, String[] column_names) {
         ContentValues values = new ContentValues();
-        ArrayList<String> data_to_insert = some_data.stringify();
-        for (int i = 0; i < COLUMN_NAMES_.length; i++) {
-            values.put(COLUMN_NAMES_[i], data_to_insert.get(i+1));
+        for (int i = 0; i < column_names.length; i++) {
+            // the first data piece to be stringed is ID, but in this case usually 'data' won't have a valid ID.
+            values.put(column_names[i], data.get(i+1));
         }
         SQLiteDatabase database = getWritableDatabase();
-        long result = database.insert(TABLE_NAME, null, values);
+        long result = database.insert(table_name, null, values);
+
         database.close();
         return result != -1;
     }
 
-    public void delete (String id_) {
+    public void delete (String id, String table_name) {
         SQLiteDatabase database = getWritableDatabase();
-        database.execSQL("DELETE FROM " + TABLE_NAME + " WHERE ID =\"" + id_ + "\";");
+        database.execSQL("DELETE FROM " + table_name + " WHERE ID =\"" + id + "\";");
     }
 
-    public boolean update (dataType some_data, String id_) {
+    public boolean update (ArrayList<String> data, String table_name, String[] column_names) {
         ContentValues values = new ContentValues();
-        ArrayList<String> data_to_update = some_data.stringify();
 
-        values.put ("ID", id_);
+        values.put("ID", data.get(0));
 
-        for (int i = 0; i < COLUMN_NAMES_.length; i++) {
-            values.put(COLUMN_NAMES_[i], data_to_update.get(i+1));
+        for (int i = 0; i < column_names.length; i++) {
+            values.put(column_names[i], data.get(i+1));
         }
         SQLiteDatabase database = getWritableDatabase();
 
-        database.update(TABLE_NAME, values, "ID = ?", new String[] { id_ });
+        database.update(table_name, values, "ID = ?", new String[] { data.get(0) });
 
         return true;
     }
 
-    public ArrayList<dataType> loadDatabaseIntoArray() {
-        ArrayList<dataType> database_array = new ArrayList<dataType>();
+    public ArrayList<ArrayList<String>> loadDatabaseIntoArray(String table_name, String[] column_names) {
+        ArrayList<ArrayList<String>> database_array = new ArrayList<ArrayList<String>>();
         SQLiteDatabase database = getWritableDatabase();
 
-        Cursor res = database.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Cursor res = database.rawQuery("SELECT * FROM " + table_name, null);
 
         if (res.getCount() == 0) {
             return database_array;
         }
         while (res.moveToNext()) {
             ArrayList<String> entry = new ArrayList<String>();
-            for (int i = 0; i <= COLUMN_NAMES_.length; i++) {
+            for (int i = 0; i <= column_names.length; i++) {
                 entry.add(res.getString(i));
             }
-            dataType new_data = getInstanceOfDataType();
-            new_data.unstringify(entry);
-            database_array.add(new_data);
+            database_array.add(entry);
         }
 
         database.close();
         return database_array;
     }
 
-    public dataType returnMostRecentEntry () {
-        dataType recentEntry = getInstanceOfDataType();
+    public ArrayList<String> returnMostRecentEntry (String table_name, String[] column_names) {
         ArrayList<String> recentEntryArray = new ArrayList<String>();
         SQLiteDatabase database = getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE 1";
+        String query = "SELECT * FROM " + table_name + " WHERE 1";
 
         Cursor c = database.rawQuery(query, null);
-
         c.moveToLast();
 
-//        if (c.getString(c.getColumnIndex("TASK"))!= null) {
-//            recentEntryArray.add(c.getString(0));
-//            recentEntryArray.add(c.getString(1));
-//            recentEntryArray.add("");
-//            recentEntryArray.add("");
-//        }
-
-        for (int i = 0; i <= COLUMN_NAMES_.length; i++) {
+        for (int i = 0; i <= column_names.length; i++) {
             recentEntryArray.add(c.getString(i));
         }
+        c.close();
 
-        recentEntry.unstringify(recentEntryArray);
-        return recentEntry;
+        return recentEntryArray;
     }
 
-    public boolean isDatabaseEmpty() {
-        ArrayList<dataType> database_array = loadDatabaseIntoArray();
-        return database_array.isEmpty();
+    public boolean isDatabaseEmpty (String table_name) {
+        SQLiteDatabase database = this.getReadableDatabase();
+        long count = DatabaseUtils.queryNumEntries(database, table_name);
+        database.close();
+        return count == 0;
     }
-
-    public dataType getInstanceOfDataType() {
-        return type.newInstance();
-    }
-}
-
-interface Stringable<dataType> {
-    ArrayList<String> stringify();
-    void unstringify(ArrayList<String> data);
-    dataType newInstance();
 }

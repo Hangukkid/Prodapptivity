@@ -56,4 +56,8 @@ public class Subject implements Stringable<Subject>{
     public Subject newInstance() {
         return new Subject();
     }
+
+    public String getDatabaseForum() {
+        return "SUBJECT_NAME TEXT, IMPORTANCE REAL, COLOUR TEXT";
+    }
 }
