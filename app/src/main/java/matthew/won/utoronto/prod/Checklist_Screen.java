@@ -1,12 +1,15 @@
 package matthew.won.utoronto.prod;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -24,7 +27,7 @@ import matthew.won.utoronto.prod.Datatypes.Task;
 TODO: find out how to add items onto a listView without having to create an array everytime the activity starts
  */
 
-public class Checklist_Screen extends AppCompatActivity {
+public class Checklist_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
 
@@ -35,6 +38,7 @@ public class Checklist_Screen extends AppCompatActivity {
     private Checklist_Adapter task_adapter;
     private ListView checklist_view;
     private EditText new_task_text;
+    private Button add_task_btn;
 
     private SQL_Helper work_database;
     private Datatype_SQL<Task> checklist_sql;
@@ -42,47 +46,76 @@ public class Checklist_Screen extends AppCompatActivity {
 
     /****************************ACTIVITY CREATION***************************************************/
 
+    public static Checklist_Screen newInstance(){
+        Checklist_Screen fragment = new Checklist_Screen();
+
+        //Not to be used yet
+        Bundle args = new Bundle();
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.checklist_screen);
+    }
 
-        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
 
-        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        checklist_view = (ListView) findViewById(R.id.checklist_view);
-        new_task_text = (EditText) findViewById(R.id.new_task_text);
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.checklist_screen, container, false);
+        checklist_view = (ListView) view.findViewById(R.id.checklist_view);
+        new_task_text = (EditText) view.findViewById(R.id.new_task_text);
+        add_task_btn = (Button) view.findViewById(R.id.add_task_btn);
 
         setupDatabase();
-
         checklist = work_database.loadDatabase(checklist_sql);
 
         //Need to add own "TextView" resource, not activity containing TextView
-        task_adapter = new Checklist_Adapter(this, R.layout.checklist_item, checklist);
+        task_adapter = new Checklist_Adapter(getActivity(), R.layout.checklist_item, checklist);
         checklist_view.setAdapter(task_adapter);
 
         setupListViewListener();
+        addTaskOnClick();
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+//        toolbar = (Toolbar) view.findViewById(R.id.my_toolbar);
+//        setSupportActionBar(toolbar);
+//
+//        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
+//        actionbar.setDisplayHomeAsUpEnabled(true);
+//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
     }
 
     /************************HELPER FUNCTIONS*********************************************************/
 
 
-    public void addTaskOnClick(View view) {
-        String new_task_string = new_task_text.getText().toString();
-        if (new_task_string != null && !new_task_string.isEmpty()) {
-            Task new_task = new Task(new_task_string, "for idiots", "now", "subject");
-            work_database.insertData(new_task, checklist_sql.TABLE_NAME);
-            new_task_text.setText("");
-            //
-            new_task = work_database.getMostRecent(checklist_sql);
-            // add task to list
-            task_adapter.add(new_task);
-        }
+    public void addTaskOnClick() {
+        add_task_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String new_task_string = new_task_text.getText().toString();
+                if (new_task_string != "" && !new_task_string.isEmpty()) {
+                    Task new_task = new Task(new_task_string, "for idiots", "now", "subject");
+                    work_database.insertData(new_task, checklist_sql.TABLE_NAME);
+                    new_task_text.setText("");
+                    //
+                    new_task = work_database.getMostRecent(checklist_sql);
+                    // add task to list
+                    task_adapter.add(new_task);
+                }
+            }
+        });
+
     }
+
+
 
     // Attaches a long click listener to the listview
     private void setupListViewListener() {
@@ -113,16 +146,13 @@ public class Checklist_Screen extends AppCompatActivity {
 
         checklist_sql = new Datatype_SQL<Task>(task_table_name, thot);
         subject_sql = new Datatype_SQL<Subject>(subject_table_name, that);
-        work_database = new SQL_Helper(database_name, this);
+        work_database = new SQL_Helper(database_name, getActivity());
 
         work_database.addTable(subject_sql);
         work_database.addTable(checklist_sql);
 
         work_database.createDatabase();
         //Database.setPomodoroDatabase(pomodoro_database);
-
-//        setupSubjects();
-
     }
 
 }

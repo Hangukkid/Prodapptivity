@@ -13,11 +13,11 @@ public class Subject implements Stringable<Subject> {
 //    private String start_time;
 //    private String end_time;
 
-    Subject() {
+    public Subject() {
 
     }
 
-    Subject (String subject_name, String importance, String colour) {
+    public Subject (String subject_name, String importance, String colour) {
         this.id = null;
         this.subject_name = subject_name;
         this.related_tasks = new ArrayList<Integer>();

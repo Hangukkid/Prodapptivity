@@ -9,10 +9,13 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,7 +31,7 @@ import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
 
 enum session_state {idle_state, focus_state, break_state, long_break_state}
 
-public class Timer_Screen extends AppCompatActivity {
+public class Timer_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
     private static final long COUNT_DOWN_INTERVAL_IN_MILLIS = 1000;
@@ -62,42 +65,52 @@ public class Timer_Screen extends AppCompatActivity {
 
 
     /****************************ACTIVITY CREATION***************************************************/
+    public static Timer_Screen newInstance(){
+        Timer_Screen fragment = new Timer_Screen();
+
+        //Not to be used yet
+        Bundle args = new Bundle();
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.timer_screen, container, false);
 
         //Super allows us to run existing code from an inherited class on top of the code we are going to write
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.timer_screen);
-
-        //Creating toolbar
-        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
 
         //Setting up media player
 //        media_player = MediaPlayer.create(getApplicationContext(), R.raw.see_you_again);
 
-        //Initializing views
-        timer_value = (TextView) findViewById(R.id.timer_value);
-        start_pause_btn = (Button) findViewById(R.id.start_pause_btn);
-        reset_btn = (Button) findViewById(R.id.reset_btn);
-        settings_btn = (Button) findViewById(R.id.settings_btn);
-
-
-        progress_bar = (ProgressBar) findViewById(R.id.progress_bar);
-
-
-
 
 
         // Notification manager
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);;
+        mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);;
 
         // Pomodoro State
         setupDatabase ();
         current_state = session_state.idle_state;
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        //Initializing views
+        timer_value = (TextView) view.findViewById(R.id.timer_value);
+
+        progress_bar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        start_pause_btn = (Button) view.findViewById(R.id.start_pause_btn);
+        reset_btn = (Button) view.findViewById(R.id.reset_btn);
+        settings_btn = (Button) view.findViewById(R.id.settings_btn);
 
         //Clicking the button will start the timer
         //If start is pressed, the button will change to "Pause"
@@ -124,14 +137,12 @@ public class Timer_Screen extends AppCompatActivity {
         settings_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent settings = new Intent(Timer_Screen.this, Settings.class);
+                Intent settings = new Intent(getActivity(), Settings.class);
                 startActivity(settings);
             }
         });
         updateTimerValue();
         updateCountDownText();
-//
-
     }
 
     /************************HELPER FUNCTIONS*********************************************************/
@@ -161,7 +172,8 @@ public class Timer_Screen extends AppCompatActivity {
 //        reset_btn.setVisibility(View.INVISIBLE);
 
         // turn off
-        wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
         wifi.setWifiEnabled(false);
 
         updateDNDSettings(NotificationManager.INTERRUPTION_FILTER_NONE);
@@ -175,7 +187,7 @@ public class Timer_Screen extends AppCompatActivity {
 //        reset_btn.setVisibility(View.VISIBLE);
     }
 
-    private void resetTimer(){
+    private void resetTimer() {
         if (count_down_timer != null) {
             count_down_timer.cancel();
             updateTimerValue();
@@ -186,7 +198,7 @@ public class Timer_Screen extends AppCompatActivity {
 //        reset_btn.setVisibility(View.INVISIBLE);
 
             //turn on
-            wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             wifi.setWifiEnabled(true);
 
             updateDNDSettings(NotificationManager.INTERRUPTION_FILTER_ALL);
@@ -212,7 +224,7 @@ public class Timer_Screen extends AppCompatActivity {
         ArrayList<Pomodoro_Data> res = pomodoro_database.loadDatabase(pomodoro_sql);
         Pomodoro_Data current_config = res.get(0);
         if (res.size() == 0) {
-            Toast.makeText(this, "Nothing Here", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Nothing Here", Toast.LENGTH_LONG).show();
             return;
         }
         else {
@@ -251,7 +263,7 @@ public class Timer_Screen extends AppCompatActivity {
                     updateTimerValue();
                     break;
                 default:
-                    Toast.makeText(this, "Error: Next State is Undefined", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Error: Next State is Undefined", Toast.LENGTH_LONG).show();
             }
         }
         startTimer();
@@ -269,7 +281,7 @@ public class Timer_Screen extends AppCompatActivity {
     }
 
     private AlertDialog.Builder createDialog () {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Timer_Screen.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         switch (current_state) {
             case focus_state:
                 builder.setMessage("Would you like to continue to your " + (number_of_sessions_left == 0 ? "long break" : "break") + "?");
@@ -281,7 +293,7 @@ public class Timer_Screen extends AppCompatActivity {
                 builder.setMessage("Would you like to start your next set?");
                 break;
             default:
-                Toast.makeText(this, "Error: Failed creating dialogue", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Error: Failed creating dialogue", Toast.LENGTH_LONG).show();
                 return builder;
         }
 
@@ -309,7 +321,7 @@ public class Timer_Screen extends AppCompatActivity {
         String table_name = "pomodoro_setting";;
 
         pomodoro_sql = new Datatype_SQL<Pomodoro_Data>(table_name, thot);
-        pomodoro_database = new SQL_Helper(database_name, this);
+        pomodoro_database = new SQL_Helper(database_name, getActivity());
 
         pomodoro_database.addTable(pomodoro_sql);
 

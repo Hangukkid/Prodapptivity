@@ -11,11 +11,11 @@ public class Task implements Stringable<Task> {
     private String deadline;
     private String subject;
 
-    Task(){
+    public Task(){
 
     }
 
-    Task (String task_name, String description, String deadline, String subject){
+    public Task (String task_name, String description, String deadline, String subject){
         this.task_name = task_name;
         this.description = description;
         this.deadline = deadline;
