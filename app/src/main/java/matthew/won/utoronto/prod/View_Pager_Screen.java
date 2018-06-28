@@ -15,6 +15,7 @@ import android.view.WindowManager;
  * Media Player
  * Other UI stuff?
  * Adding animations to add tasks is super easy
+ * Issue with adding tasks on checklist
  */
 
 public class View_Pager_Screen extends AppCompatActivity {
