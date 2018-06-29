@@ -19,12 +19,25 @@ public class Colour_Select_Adapter extends ArrayAdapter<Colour> {
         super(context, resource, objects);
     }
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+
+        return getRowView(position, convertView, parent);
+    }
+
+    @Override
+    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+
+        return getRowView(position,  convertView, parent);
+    }
+
+    private View getRowView (int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Colour c = getItem(position);
 
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.checklist_item, parent, false);
 
-        TextView colour_name_text = (TextView) convertView.findViewById(R.id.colour_name_text);
+        TextView colour_name_text = (TextView) convertView.findViewById(R.id.colour_name_txt);
         ImageView colour = (ImageView) convertView.findViewById(R.id.colour);
 
         colour_name_text.setText(c.getColour());

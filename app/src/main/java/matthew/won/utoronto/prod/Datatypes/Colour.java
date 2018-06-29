@@ -5,20 +5,24 @@ import java.util.ArrayList;
 import matthew.won.utoronto.prod.Database.Stringable;
 
 public class Colour implements Stringable<Colour> {
-    public static ArrayList<Colour> list_of_colours = new ArrayList<>();
+    private static ArrayList<Colour> list_of_colours = new ArrayList<>();
 
     private String id;
     private String colour;
     private String hex_code;
 
-    Colour () {
+    private static boolean default_colours = false;
 
+    public Colour () {
+        this.colour = "Black";
+        this.hex_code = "000000";
     }
 
-    Colour (String colour, String hex_code) {
+    public Colour (String colour, String hex_code) {
         this.colour = colour;
         this.hex_code = hex_code;
-        list_of_colours.add(this);
+        if (!list_of_colours.contains(this))
+            list_of_colours.add(this);
     }
 
     public String getColour () {
@@ -27,6 +31,19 @@ public class Colour implements Stringable<Colour> {
 
     public String getHexCode () {
         return hex_code;
+    }
+
+    public static ArrayList<Colour> give_list_of_colours () {
+        if (!default_colours)
+            new Colour("White", "FFFFFF");
+        new Colour("Black", "000000");
+        new Colour("Red", "FF0000");
+        new Colour("Yellow", "FFFF00");
+        new Colour("Green", "00FF00");
+        new Colour("Blue", "0000FF");
+        default_colours = true;
+
+        return list_of_colours;
     }
 
     public ArrayList<String> stringify () {

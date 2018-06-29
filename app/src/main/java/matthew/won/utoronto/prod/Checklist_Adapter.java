@@ -26,7 +26,7 @@ public class Checklist_Adapter extends ArrayAdapter<Task> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.checklist_item, parent, false);
         }
 
-        TextView task_name_text = (TextView) convertView.findViewById(R.id.colour_name_text);
+        TextView task_name_text = (TextView) convertView.findViewById(R.id.colour_name_txt);
         TextView task_description_text = (TextView) convertView.findViewById(R.id.task_description_text);
         TextView due_date = (TextView) convertView.findViewById(R.id.due_date);
 
