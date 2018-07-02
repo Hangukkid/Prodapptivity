@@ -40,7 +40,7 @@ public class Timer_Screen extends Fragment {
 
     private Toolbar toolbar;
     private WifiManager wifi;
-    private SQL_Helper pomodoro_database;
+    private SQL_Helper database;
     private Datatype_SQL<Pomodoro_Data> pomodoro_sql;
     private NotificationManager mNotificationManager;
 
@@ -95,9 +95,9 @@ public class Timer_Screen extends Fragment {
         mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);;
 
         // Pomodoro State
-        setupDatabase ();
+        database = Database.getDatabase();
+        pomodoro_sql = Database.getPomodoroSQL();
         current_state = session_state.idle_state;
-
 
         return view;
     }
@@ -220,8 +220,8 @@ public class Timer_Screen extends Fragment {
     }
 
     private void updateTimerValue () {
-        SQL_Helper pomodoro_database = Database.getPomodoroDatabase();
-        ArrayList<Pomodoro_Data> res = pomodoro_database.loadDatabase(pomodoro_sql);
+        SQL_Helper database = Database.getDatabase();
+        ArrayList<Pomodoro_Data> res = database.loadDatabase(pomodoro_sql);
         Pomodoro_Data current_config = res.get(0);
         if (res.size() == 0) {
             Toast.makeText(getActivity(), "Nothing Here", Toast.LENGTH_LONG).show();
@@ -314,26 +314,5 @@ public class Timer_Screen extends Fragment {
         return builder;
     }
 
-    private void setupDatabase () {
-        Pomodoro_Data thot = new Pomodoro_Data();
-
-        String database_name = "settings.db";
-        String table_name = "pomodoro_setting";;
-
-        pomodoro_sql = new Datatype_SQL<Pomodoro_Data>(table_name, thot);
-        pomodoro_database = new SQL_Helper(database_name, getActivity());
-
-        pomodoro_database.addTable(pomodoro_sql);
-
-        pomodoro_database.createDatabase();
-
-        if (pomodoro_database.isDatabaseEmpty(table_name)) {
-            Pomodoro_Data initial = new Pomodoro_Data(25, 5, 15, 4);
-            pomodoro_database.insertData(initial, table_name);
-        }
-
-        Database.setPomodoroDatabase(pomodoro_database);
-        Database.setPomodoroSQL(pomodoro_sql);
-    }
 }
 

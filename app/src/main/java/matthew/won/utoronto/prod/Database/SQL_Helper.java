@@ -23,11 +23,12 @@ public class SQL_Helper {
         foreign_keys = false;
     }
 
-    public void createDatabase () {
+    public boolean createDatabase () {
         if (foreign_keys) {
             Query_List.first.add("PRAGMA foreign_keys = ON;");
         }
         database = new Database_Helper(context, database_name, Query_List);
+        return true;
     }
 
     public <T extends Stringable<T>> void addTable (Datatype_SQL<T> data) {

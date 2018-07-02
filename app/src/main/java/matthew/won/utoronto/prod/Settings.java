@@ -23,7 +23,7 @@ public class Settings extends AppCompatActivity {
     private TextView longbreaklength;
     private TextView numofsessions;
 
-    public SQL_Helper pomodoro_database;
+    public SQL_Helper database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class Settings extends AppCompatActivity {
         pomodoro_save_btn = (Button) findViewById(R.id.pomodoro_save_btn);
         pomodoro_data_btn = (Button) findViewById(R.id.pomodoro_data_btn);
 
-        pomodoro_database = Database.getPomodoroDatabase();
+        database = Database.getDatabase();
 
         SeekCurrent();
         UpdateData ();
@@ -49,13 +49,13 @@ public class Settings extends AppCompatActivity {
         pomodoro_save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pomodoro_Data pd = pomodoro_database.getMostRecent(Database.getPomodoroSQL());
+                Pomodoro_Data pd = database.getMostRecent(Database.getPomodoroSQL());
                 pd.focus_time = Integer.parseInt(worklength.getText().toString());
                 pd.break_time = Integer.parseInt(breaklength.getText().toString());
                 pd.long_break_time = Integer.parseInt(longbreaklength.getText().toString());
                 pd.number_of_sessoions = Integer.parseInt(numofsessions.getText().toString());
 
-                boolean isUpdate = pomodoro_database.updateData(pd, Database.getPomodoroSQL().TABLE_NAME);
+                boolean isUpdate = database.updateData(pd, Database.getPomodoroSQL().TABLE_NAME);
                 if (isUpdate) {
                     Toast.makeText(Settings.this, "Data Updated", Toast.LENGTH_LONG).show();
                 }
@@ -70,7 +70,7 @@ public class Settings extends AppCompatActivity {
         pomodoro_data_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Pomodoro_Data> res = pomodoro_database.loadDatabase(Database.getPomodoroSQL());
+                ArrayList<Pomodoro_Data> res = database.loadDatabase(Database.getPomodoroSQL());
                 if (res.size() == 0) {
                     showMessage("Error", "Nothing found");
                     return;

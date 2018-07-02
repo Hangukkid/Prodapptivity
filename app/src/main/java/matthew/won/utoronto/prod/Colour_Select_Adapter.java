@@ -35,13 +35,13 @@ public class Colour_Select_Adapter extends ArrayAdapter<Colour> {
         Colour c = getItem(position);
 
         if (convertView == null)
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.checklist_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.colour_item, parent, false);
 
         TextView colour_name_text = (TextView) convertView.findViewById(R.id.colour_name_txt);
         ImageView colour = (ImageView) convertView.findViewById(R.id.colour);
 
         colour_name_text.setText(c.getColour());
-        colour.setBackgroundColor(Integer.parseInt(c.getHexCode()));
+        colour.setBackgroundColor(c.getColourCode());
 
         return convertView;
     }

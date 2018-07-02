@@ -2,6 +2,9 @@ package matthew.won.utoronto.prod.Datatypes;
 
 import java.util.ArrayList;
 
+import matthew.won.utoronto.prod.Database.Database;
+import matthew.won.utoronto.prod.Database.Datatype_SQL;
+import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Database.Stringable;
 
 public class Task implements Stringable<Task> {
@@ -64,4 +67,14 @@ public class Task implements Stringable<Task> {
         return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE TEXT, SUBJECT TEXT";//, SUBJECT_ID INTEGER NOT NULL, FOREIGN KEY (SUBJECT_ID) REFERENCES subjects(ID) ON DELETE CASCADE";
     }
 
+    public static void createTable (String table_name) {
+        Task thot = new Task();
+
+        SQL_Helper database = Database.getDatabase();
+
+        Datatype_SQL<Task> checklist_sql = new Datatype_SQL<>(table_name, thot);
+        database.addTable(checklist_sql);
+
+        Database.setTaskSQL(checklist_sql);
+    }
 }

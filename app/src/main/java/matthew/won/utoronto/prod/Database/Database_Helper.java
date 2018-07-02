@@ -22,7 +22,7 @@ public class Database_Helper extends SQLiteOpenHelper {
         super (context, database_name,null, 1);
 
         // deletes previous versions of database.
-//        boolean b = context.deleteDatabase(database_name);
+        boolean b = context.deleteDatabase(database_name);
 
         Query = query;
         DATABASE_NAME = database_name;

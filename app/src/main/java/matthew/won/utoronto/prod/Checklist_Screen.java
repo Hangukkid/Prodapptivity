@@ -15,9 +15,9 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import matthew.won.utoronto.prod.Database.Database;
 import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
-import matthew.won.utoronto.prod.Datatypes.Subject;
 import matthew.won.utoronto.prod.Datatypes.Task;
 
 //Website to create the list:
@@ -42,7 +42,6 @@ public class Checklist_Screen extends Fragment {
 
     private SQL_Helper work_database;
     private Datatype_SQL<Task> checklist_sql;
-    private Datatype_SQL<Subject> subject_sql;
 
     /****************************ACTIVITY CREATION***************************************************/
 
@@ -68,7 +67,9 @@ public class Checklist_Screen extends Fragment {
         new_task_text = (EditText) view.findViewById(R.id.new_task_text);
         add_task_btn = (Button) view.findViewById(R.id.add_task_btn);
 
-        setupDatabase();
+        work_database = Database.getDatabase();
+        checklist_sql = Database.getTaskSQL();
+
         checklist = work_database.loadDatabase(checklist_sql);
 
         //Need to add own "TextView" resource, not activity containing TextView
@@ -137,23 +138,6 @@ public class Checklist_Screen extends Fragment {
         });
     }
 
-    private void setupDatabase () {
-        Task thot = new Task();
-        Subject that = new Subject();
-        String database_name = "homework.db";
-        String task_table_name = "tasks";
-        String subject_table_name = "subjects";
-
-        checklist_sql = new Datatype_SQL<Task>(task_table_name, thot);
-        subject_sql = new Datatype_SQL<Subject>(subject_table_name, that);
-        work_database = new SQL_Helper(database_name, getActivity());
-
-        work_database.addTable(subject_sql);
-        work_database.addTable(checklist_sql);
-
-        work_database.createDatabase();
-        //Database.setPomodoroDatabase(pomodoro_database);
-    }
 
 }
 

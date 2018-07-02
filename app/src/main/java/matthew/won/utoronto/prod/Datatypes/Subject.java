@@ -2,6 +2,9 @@ package matthew.won.utoronto.prod.Datatypes;
 
 import java.util.ArrayList;
 
+import matthew.won.utoronto.prod.Database.Database;
+import matthew.won.utoronto.prod.Database.Datatype_SQL;
+import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Database.Stringable;
 
 public class Subject implements Stringable<Subject> {
@@ -61,5 +64,15 @@ public class Subject implements Stringable<Subject> {
 
     public String getDatabaseForum() {
         return "SUBJECT_NAME TEXT, IMPORTANCE REAL, COLOUR TEXT";
+    }
+
+    public static void createTable (String table_name) {
+        Subject that = new Subject();
+
+        SQL_Helper database = Database.getDatabase();
+
+        Datatype_SQL<Subject> subject_sql = new Datatype_SQL<>(table_name, that);
+        database.addTable(subject_sql);
+        Database.setSubjectSQL(subject_sql);
     }
 }
