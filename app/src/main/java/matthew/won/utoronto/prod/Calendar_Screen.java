@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -15,28 +14,35 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 
 /*
-IMPLEMENTED VIEW EXPAND FEATURE IN TEMPORARY PROJECT -> TRIED TO INTEGRATE IT INTO CALENDAR VIEW -> BECAUSE IT IS A FRAGMENT, FUNCTIONS ARE DIFFERENT (I.E. ONTOUCH)
--> IN ONTOUCH, THERE IS A WARNING OF NOT OVERRIDING PERFORMCLICK() IN THE BUILT-IN VIEW LAYOUTS (LINEARLAYOUT) -> SOLUTION ONLINE WAS TO CREATE A CUSTOM LAYOUT AND OVERRIDE PERFORM CLICK
--> CREATED A CUSTOM LINEARLAYOUT CLASS -> CUSTOM CLASS HAS ISSUES BEING INFLATED (THAT IS THE CURRENT ISSUE)
+IMPLEMENTED VIEW EXPAND FEATURE IN TEMPORARY PROJECT
+-> TRIED TO INTEGRATE IT INTO CALENDAR VIEW
+-> BECAUSE IT IS A FRAGMENT, FUNCTIONS ARE DIFFERENT (I.E. ONTOUCH)
+-> IN ONTOUCH, THERE IS A WARNING OF NOT OVERRIDING PERFORMCLICK() IN THE BUILT-IN VIEW LAYOUTS (LINEARLAYOUT)
+-> SOLUTION ONLINE WAS TO CREATE A CUSTOM LAYOUT AND OVERRIDE PERFORM CLICK
+-> CREATED A CUSTOM LINEARLAYOUT CLASS
+-> CUSTOM CLASS HAS ISSUES BEING INFLATED (THAT IS THE CURRENT ISSUE)
+-> SYNCED PROJECT WITH GRADLE FILES AND A DIFFERENT ERROR OCCURS:
  */
+
 
 public class Calendar_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
 
-    private LinLayout linear_layout;
+    private LinearLayout linear_layout;
 
 
     private RelativeLayout top_view_group;
     private CalendarView calendar_view;
     private ListView checklist_view;
     private boolean shown;
-    private GestureDetectorCompat mDetector;
+    private GestureDetector mDetector;
     private int max_height;
     private int start_height;
     private int list_view_height;
@@ -63,7 +69,7 @@ public class Calendar_Screen extends Fragment {
         View view = inflater.inflate(R.layout.calendar_screen, container, false);
         top_view_group = (RelativeLayout) view.findViewById(R.id.top_view_group);
 //        checklist_view = (ListView) view.findViewById(R.id.checklist_view);
-        linear_layout = (LinLayout) view.findViewById(R.id.linear_layout);
+        linear_layout = (LinearLayout) view.findViewById(R.id.linear_layout);
         calendar_view = (CalendarView) view.findViewById(R.id.calendar_view);
         shown = false;
         start_height = 0;
@@ -93,15 +99,24 @@ public class Calendar_Screen extends Fragment {
                     }
                 });
 
-        mDetector = new GestureDetectorCompat(getActivity(), new MyGestureListener());
+        mDetector = new GestureDetector(getActivity(), new MyGestureListener());
+
+
+        /*
+        The warning is for visually impaired people because the UI views are set up with feedback to help them
+        navigate through the app.
+         */
         linear_layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d("Touch", "Touch occurred");
                 mDetector.onTouchEvent(event);
-                return false;
+                return true;
             }
         });
+
+
+
     }
 
 
@@ -149,6 +164,11 @@ public class Calendar_Screen extends Fragment {
         private static final int SWIPE_THRESHOLD_VELOCITY = 100;
 
         @Override
+        public boolean onDown(MotionEvent e) {
+            return false;
+        }
+
+        @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             Log.d("Touch", "Fling occurred");
 
@@ -184,7 +204,7 @@ public class Calendar_Screen extends Fragment {
 
             if (!shown) {
                 shown = true;
-                expand(checklist_view, 300, max_height);
+                expand(linear_layout, 300, max_height);
             }
         }
 
@@ -193,7 +213,7 @@ public class Calendar_Screen extends Fragment {
 
             if (shown) {
                 shown = false;
-                collapse(checklist_view, 300, start_height);
+                collapse(linear_layout, 300, start_height);
             }
         }
     }

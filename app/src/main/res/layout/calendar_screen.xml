@@ -25,16 +25,15 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/my_toolbar" />
 
-    <LinLayout
+    <LinearLayout
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="198dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:background="@color/colorAccent"
-        class = "LinLayout">
+        android:background="@color/colorAccent">
 
-    </LinLayout>
+    </LinearLayout>
 
     <!--<ListView-->
         <!--android:id="@+id/checklist_view"-->
