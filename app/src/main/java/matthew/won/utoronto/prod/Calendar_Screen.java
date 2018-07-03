@@ -147,8 +147,8 @@ public class Calendar_Screen extends Fragment {
     }
 
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        private static final int SWIPE_MIN_DISTANCE = 150;
-        private static final int SWIPE_THRESHOLD_VELOCITY = 100;
+        private static final int SWIPE_MIN_DISTANCE = 65;
+        private static final int SWIPE_THRESHOLD_VELOCITY = 150;
 
         @Override
         public boolean onDown(MotionEvent e) {
