@@ -18,19 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-
-/*
-IMPLEMENTED VIEW EXPAND FEATURE IN TEMPORARY PROJECT
--> TRIED TO INTEGRATE IT INTO CALENDAR VIEW
--> BECAUSE IT IS A FRAGMENT, FUNCTIONS ARE DIFFERENT (I.E. ONTOUCH)
--> IN ONTOUCH, THERE IS A WARNING OF NOT OVERRIDING PERFORMCLICK() IN THE BUILT-IN VIEW LAYOUTS (LINEARLAYOUT)
--> SOLUTION ONLINE WAS TO CREATE A CUSTOM LAYOUT AND OVERRIDE PERFORM CLICK
--> CREATED A CUSTOM LINEARLAYOUT CLASS
--> CUSTOM CLASS HAS ISSUES BEING INFLATED (THAT IS THE CURRENT ISSUE)
--> SYNCED PROJECT WITH GRADLE FILES AND A DIFFERENT ERROR OCCURS:
- */
-
-
 public class Calendar_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
@@ -104,7 +91,7 @@ public class Calendar_Screen extends Fragment {
 
         /*
         The warning is for visually impaired people because the UI views are set up with feedback to help them
-        navigate through the app.
+        navigate through the app. Welp sucks for blind people
          */
         linear_layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
