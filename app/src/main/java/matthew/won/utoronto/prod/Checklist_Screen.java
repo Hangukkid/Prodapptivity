@@ -1,5 +1,6 @@
 package matthew.won.utoronto.prod;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import matthew.won.utoronto.prod.Adapters.Checklist_Adapter;
 import matthew.won.utoronto.prod.Database.Database;
 import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
@@ -65,7 +67,7 @@ public class Checklist_Screen extends Fragment {
         View view = inflater.inflate(R.layout.checklist_screen, container, false);
         checklist_view = (ListView) view.findViewById(R.id.checklist_view);
         new_task_text = (EditText) view.findViewById(R.id.new_task_text);
-        add_task_btn = (Button) view.findViewById(R.id.add_task_btn);
+
 
         work_database = Database.getDatabase();
         checklist_sql = Database.getTaskSQL();
@@ -77,7 +79,7 @@ public class Checklist_Screen extends Fragment {
         checklist_view.setAdapter(task_adapter);
 
         setupListViewListener();
-        addTaskOnClick();
+
         return view;
     }
 
@@ -90,8 +92,14 @@ public class Checklist_Screen extends Fragment {
 //        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
 //        actionbar.setDisplayHomeAsUpEnabled(true);
 //        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        add_task_btn = (Button) view.findViewById(R.id.add_task_btn);
+        addTaskOnClick();
 
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     /************************HELPER FUNCTIONS*********************************************************/
@@ -101,21 +109,31 @@ public class Checklist_Screen extends Fragment {
         add_task_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String new_task_string = new_task_text.getText().toString();
-                if (new_task_string != "" && !new_task_string.isEmpty()) {
-                    Task new_task = new Task(new_task_string, "for idiots", "now", "subject");
-                    work_database.insertData(new_task, checklist_sql.TABLE_NAME);
-                    new_task_text.setText("");
-                    //
-                    new_task = work_database.getMostRecent(checklist_sql);
-                    // add task to list
-                    task_adapter.add(new_task);
-                }
+//                String new_task_string = new_task_text.getText().toString();
+//                if (new_task_string != "" && !new_task_string.isEmpty()) {
+//                    Task new_task = new Task(new_task_string, "for idiots", "now", "subject");
+//                    work_database.insertData(new_task, checklist_sql.TABLE_NAME);
+//                    new_task_text.setText("");
+//
+//                    new_task = work_database.getMostRecent(checklist_sql);
+//                    // add task to list
+//                    task_adapter.add(new_task);
+//                }
+                Intent create_task = new Intent(getActivity(), Create_Task.class);
+                startActivityForResult(create_task, 2);
             }
         });
-
     }
-
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
+        if (requestCode == 2)
+        {
+            Task new_task = work_database.getMostRecent(checklist_sql);
+            task_adapter.add(new_task);
+        }
+    }
 
 
     // Attaches a long click listener to the listview

@@ -51,7 +51,7 @@ public class Calendar_Screen extends Fragment {
         subject_make_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent subjects = new Intent(getActivity(), CreateSubject.class);
+                Intent subjects = new Intent(getActivity(), Create_Subject.class);
                 startActivity(subjects);
             }
         });

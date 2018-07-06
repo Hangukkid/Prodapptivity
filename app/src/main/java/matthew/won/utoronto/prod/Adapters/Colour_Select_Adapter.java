@@ -1,4 +1,4 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import matthew.won.utoronto.prod.Datatypes.Colour;
+import matthew.won.utoronto.prod.R;
 
 public class Colour_Select_Adapter extends ArrayAdapter<Colour> {
     public Colour_Select_Adapter(Context context, int resource, ArrayList<Colour> objects){
@@ -38,7 +39,7 @@ public class Colour_Select_Adapter extends ArrayAdapter<Colour> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.colour_item, parent, false);
 
         TextView colour_name_text = (TextView) convertView.findViewById(R.id.colour_name_txt);
-        ImageView colour = (ImageView) convertView.findViewById(R.id.colour);
+        ImageView colour = (ImageView) convertView.findViewById(R.id.subject_colour);
 
         colour_name_text.setText(c.getColour());
         colour.setBackgroundColor(c.getColourCode());

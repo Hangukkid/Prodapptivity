@@ -1,13 +1,17 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-public class PagerAdapter extends FragmentPagerAdapter {
+import matthew.won.utoronto.prod.Calendar_Screen;
+import matthew.won.utoronto.prod.Checklist_Screen;
+import matthew.won.utoronto.prod.Timer_Screen;
+
+public class Pager_Adapter extends FragmentPagerAdapter {
     private static final int NUM_PAGES = 3;
 
-    public PagerAdapter(FragmentManager fm){
+    public Pager_Adapter(FragmentManager fm){
         super(fm);
     }
 

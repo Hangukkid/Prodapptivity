@@ -1,4 +1,4 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import matthew.won.utoronto.prod.Datatypes.Task;
+import matthew.won.utoronto.prod.R;
 
 public class Checklist_Adapter extends ArrayAdapter<Task> {
 

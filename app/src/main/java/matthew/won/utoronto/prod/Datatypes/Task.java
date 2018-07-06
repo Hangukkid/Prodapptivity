@@ -12,17 +12,17 @@ public class Task implements Stringable<Task> {
     private String task_name;
     private String description;
     private String deadline;
-    private String subject;
+    private String subject_id;
 
     public Task(){
 
     }
 
-    public Task (String task_name, String description, String deadline, String subject){
+    public Task (String task_name, String description, String deadline, String subject_id){
         this.task_name = task_name;
         this.description = description;
         this.deadline = deadline;
-        this.subject = subject;
+        this.subject_id = subject_id;
     }
     public String getID() {
         return id;
@@ -49,7 +49,7 @@ public class Task implements Stringable<Task> {
         stringified_task.add(task_name);
         stringified_task.add(description);
         stringified_task.add(deadline);
-        stringified_task.add(subject);
+        stringified_task.add(subject_id);
         return stringified_task;
     }
     public void unstringify(ArrayList<String> data) {
@@ -57,14 +57,14 @@ public class Task implements Stringable<Task> {
         this.task_name = data.get(1);
         this.description = data.get(2);
         this.deadline = data.get(3);
-        this.subject = data.get(4);
+        this.subject_id = data.get(4);
     }
     public Task newInstance() {
         return new Task();
     }
 
     public String getDatabaseForum() {
-        return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE TEXT, SUBJECT TEXT";//, SUBJECT_ID INTEGER NOT NULL, FOREIGN KEY (SUBJECT_ID) REFERENCES subjects(ID) ON DELETE CASCADE";
+        return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE TEXT, SUBJECT_ID INTEGER NOT NULL, FOREIGN KEY (SUBJECT_ID) REFERENCES subjects(ID) ON DELETE CASCADE";
     }
 
     public static void createTable (String table_name) {

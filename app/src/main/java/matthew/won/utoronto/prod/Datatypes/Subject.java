@@ -74,5 +74,7 @@ public class Subject implements Stringable<Subject> {
         Datatype_SQL<Subject> subject_sql = new Datatype_SQL<>(table_name, that);
         database.addTable(subject_sql);
         Database.setSubjectSQL(subject_sql);
+
+
     }
 }

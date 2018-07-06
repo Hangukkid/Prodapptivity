@@ -10,13 +10,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import matthew.won.utoronto.prod.Adapters.Colour_Select_Adapter;
 import matthew.won.utoronto.prod.Database.Database;
 import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Colour;
 import matthew.won.utoronto.prod.Datatypes.Subject;
 
-public class CreateSubject extends AppCompatActivity {
+public class Create_Subject extends AppCompatActivity {
 
     TextView subject_name_txt;
     TextView subject_importance_txt;

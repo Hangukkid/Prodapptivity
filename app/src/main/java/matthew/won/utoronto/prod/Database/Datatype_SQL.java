@@ -1,5 +1,7 @@
 package matthew.won.utoronto.prod.Database;
 
+import java.util.Arrays;
+
 public class Datatype_SQL<dataType extends Stringable<dataType>> {
 
     public String TABLE_NAME;
@@ -17,8 +19,11 @@ public class Datatype_SQL<dataType extends Stringable<dataType>> {
     private void setupTables () {
         this.COLUMN_NAMES = type.getDatabaseForum();
         COLUMN_NAMES_ = COLUMN_NAMES.split(",");
+        if (COLUMN_NAMES.contains("FOREIGN"))
+            COLUMN_NAMES_ = Arrays.copyOf(COLUMN_NAMES_, COLUMN_NAMES_.length - 1);
         for (int i = 0; i < COLUMN_NAMES_.length; i++) {
-            COLUMN_NAMES_[i] = COLUMN_NAMES_[i].trim().split(" ")[0];
+            String name = COLUMN_NAMES_[i].trim().split(" ")[0];
+            COLUMN_NAMES_[i] = name;
         }
     }
 

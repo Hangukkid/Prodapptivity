@@ -3,36 +3,51 @@ package matthew.won.utoronto.prod.Datatypes;
 import android.graphics.Color;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Colour {
+    //Create a hashmap for colour to int
     private static ArrayList<Colour> list_of_colours = new ArrayList<>();
+    private static HashMap<String, Integer> name_to_id = new HashMap<>();
 
-    private String colour_name;
+    private String name;
     private Integer colour_code;
 
     private static boolean default_colours = false;
 
     public Colour () {
-        this.colour_name = "Black";
+        this.name = "Black";
         this.colour_code = Color.BLACK;
     }
 
-    public Colour (String colour, Integer hex_code) {
-        this.colour_name = colour;
-        this.colour_code = hex_code;
-        if (!list_of_colours.contains(this))
+    private Colour (String colour, Integer colour_code) {
+        this.name = colour;
+        this.colour_code = colour_code;
+        if (!name_to_id.containsKey(this.name) && !list_of_colours.contains(this)) {
+            name_to_id.put(this.name, this.colour_code);
             list_of_colours.add(this);
+        }
     }
 
+    public Colour (String colour, String hex_code) {
+        this.name = colour;
+        this.colour_code = Color.parseColor(hex_code);
+        if (!name_to_id.containsKey(this.name) && !list_of_colours.contains(this)) {
+            name_to_id.put(this.name, this.colour_code);
+            list_of_colours.add(this);
+        }
+    }
+
+
     public String getColour () {
-        return colour_name;
+        return name;
     }
 
     public Integer getColourCode () {
         return colour_code;
     }
 
-    public static ArrayList<Colour> give_list_of_colours () {
+    public static void create_default_colours () {
         if (!default_colours) {
             new Colour("White", Color.WHITE);
             new Colour("Black", Color.BLACK);
@@ -40,10 +55,24 @@ public class Colour {
             new Colour("Yellow", Color.YELLOW);
             new Colour("Green", Color.GREEN);
             new Colour("Blue", Color.BLUE);
+            new Colour("Cyan", Color.CYAN);
+            new Colour("Dark Gray", Color.DKGRAY);
+            new Colour("Light Gray", Color.LTGRAY);
+            new Colour("Magenta", Color.MAGENTA);
+            new Colour("Transparent", Color.TRANSPARENT);
             default_colours = true;
         }
+    }
 
+    public static ArrayList<Colour> give_list_of_colours () {
+        create_default_colours();
         return list_of_colours;
+    }
+
+    public static Integer get_colour (String name) {
+        create_default_colours();
+        if (name == null) return 0;
+        return name_to_id.get(name);
     }
 
 //    public ArrayList<String> stringify () {
