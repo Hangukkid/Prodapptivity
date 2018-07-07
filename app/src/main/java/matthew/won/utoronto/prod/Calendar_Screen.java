@@ -1,5 +1,6 @@
 package matthew.won.utoronto.prod;
 
+import android.content.Intent;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Button;
 
 public class Calendar_Screen extends Fragment {
 
@@ -34,14 +36,15 @@ public class Calendar_Screen extends Fragment {
     private int start_height;
     private int list_view_height;
     private boolean height_init = false;
+    Button subject_make_btn;
 
     /****************************ACTIVITY CREATION***************************************************/
 
-    public static Calendar_Screen newInstance(){
+    public static Calendar_Screen newInstance() {
         Calendar_Screen fragment = new Calendar_Screen();
 
         //not for use yet
-        Bundle args = new Bundle ();
+        Bundle args = new Bundle();
         return fragment;
     }
 
@@ -102,15 +105,14 @@ public class Calendar_Screen extends Fragment {
             }
         });
 
+        subject_make_btn = (Button) view.findViewById(R.id.subject_make_btn);
+        makeSubjectPage();
 
 
     }
 
-
-
-
-
     /************************HELPER FUNCTIONS*********************************************************/
+
 
     public static void expand(final View v, int duration, int targetHeight) {
 
@@ -145,6 +147,17 @@ public class Calendar_Screen extends Fragment {
         valueAnimator.setDuration(duration);
         valueAnimator.start();
     }
+
+    private void makeSubjectPage() {
+        subject_make_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent subjects = new Intent(getActivity(), Create_Subject.class);
+                startActivity(subjects);
+            }
+        });
+    }
+
 
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         private static final int SWIPE_MIN_DISTANCE = 65;
@@ -182,9 +195,12 @@ public class Calendar_Screen extends Fragment {
             }
             return false;
         }
-        public void onRightToLeft() { }
 
-        public void onLeftToRight() { }
+        public void onRightToLeft() {
+        }
+
+        public void onLeftToRight() {
+        }
 
         public void onBottomToTop() {
             Log.d("Touch", "Expand occurred");
@@ -205,5 +221,6 @@ public class Calendar_Screen extends Fragment {
         }
     }
 }
+
 
 

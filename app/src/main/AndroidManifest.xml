@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="matthew.won.utoronto.prod">
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <!--<uses-permission android:name="android.permission.UPDATE_DEVICE_STATS"/>-->
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- <uses-permission android:name="android.permission.UPDATE_DEVICE_STATS"/> -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
         android:allowBackup="true"
@@ -14,8 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
-
         <activity
             android:name=".View_Pager_Screen"
             android:label="Oh View Pager Screen">
@@ -24,32 +22,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
-        <activity
-            android:name=".Calendar_Screen"
-            android:label="Oh Calendar">
-
-        </activity>
-        <activity
-            android:name=".Checklist_Screen"
-            android:label="Oh Checklist">
-
-        </activity>
-
-        <activity
-            android:name=".Timer_Screen"
-            android:label="Oh Timer">
-
-        </activity>
-
         <activity
             android:name=".Settings"
-            android:label="@string/title_activity_settings" >
-
-        </activity>
-
+            android:label="@string/title_activity_settings"></activity>
+        <activity
+            android:name=".Create_Subject"
+            android:label="Create Subject"></activity>
+        <activity android:name=".Create_Task"></activity>
     </application>
 
 </manifest>

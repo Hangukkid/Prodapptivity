@@ -1,4 +1,4 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Useless;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
+
+import matthew.won.utoronto.prod.Datatypes.Task;
 
 public class TaskDatabaseHelper extends SQLiteOpenHelper{
 

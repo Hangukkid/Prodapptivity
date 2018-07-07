@@ -1,9 +1,6 @@
 package matthew.won.utoronto.prod;
 
 import android.app.AlertDialog;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,7 +9,9 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v7.app.ActionBar;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +24,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import matthew.won.utoronto.prod.Database.Database;
+import matthew.won.utoronto.prod.Database.Datatype_SQL;
+import matthew.won.utoronto.prod.Database.SQL_Helper;
+import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
+
 enum session_state {idle_state, focus_state, break_state, long_break_state}
 
 public class Timer_Screen extends Fragment {
@@ -36,7 +40,8 @@ public class Timer_Screen extends Fragment {
 
     private Toolbar toolbar;
     private WifiManager wifi;
-    private Database_Helper<Pomodoro_Data> pomodoro_database;
+    private SQL_Helper database;
+    private Datatype_SQL<Pomodoro_Data> pomodoro_sql;
     private NotificationManager mNotificationManager;
 
     private TextView timer_value;
@@ -90,9 +95,11 @@ public class Timer_Screen extends Fragment {
         mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);;
 
         // Pomodoro State
-        setUpDatabase ();
+        database = Database.getDatabase();
+        pomodoro_sql = Database.getPomodoroSQL();
         current_state = session_state.idle_state;
 
+        wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         return view;
     }
@@ -136,7 +143,7 @@ public class Timer_Screen extends Fragment {
                 startActivity(settings);
             }
         });
-
+        updateTimerValue();
         updateCountDownText();
     }
 
@@ -167,7 +174,7 @@ public class Timer_Screen extends Fragment {
 //        reset_btn.setVisibility(View.INVISIBLE);
 
         // turn off
-        wifi = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+        wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         wifi.setWifiEnabled(false);
 
@@ -182,20 +189,22 @@ public class Timer_Screen extends Fragment {
 //        reset_btn.setVisibility(View.VISIBLE);
     }
 
-    private void resetTimer(){
-        count_down_timer.cancel();
-        updateTimerValue();
-        is_timer_running= false;
-        updateCountDownText();
-        start_pause_btn.setText("Start");
-        current_state = session_state.idle_state;
+    private void resetTimer() {
+        if (count_down_timer != null) {
+            count_down_timer.cancel();
+            updateTimerValue();
+            is_timer_running = false;
+            updateCountDownText();
+            start_pause_btn.setText("Start");
+            current_state = session_state.idle_state;
 //        reset_btn.setVisibility(View.INVISIBLE);
 
-        //turn on
-        wifi = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
-        wifi.setWifiEnabled(true);
+            //turn on
+            wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            wifi.setWifiEnabled(true);
 
-        updateDNDSettings(NotificationManager.INTERRUPTION_FILTER_ALL);
+            updateDNDSettings(NotificationManager.INTERRUPTION_FILTER_ALL);
+        }
     }
 
 
@@ -213,8 +222,8 @@ public class Timer_Screen extends Fragment {
     }
 
     private void updateTimerValue () {
-        Database_Helper pomodoro_database = Database.getPomodoroDatabase();
-        ArrayList<Pomodoro_Data> res = pomodoro_database.loadDatabaseIntoArray();
+        SQL_Helper database = Database.getDatabase();
+        ArrayList<Pomodoro_Data> res = database.loadDatabase(pomodoro_sql);
         Pomodoro_Data current_config = res.get(0);
         if (res.size() == 0) {
             Toast.makeText(getActivity(), "Nothing Here", Toast.LENGTH_LONG).show();
@@ -307,20 +316,5 @@ public class Timer_Screen extends Fragment {
         return builder;
     }
 
-    private void setUpDatabase () {
-        Pomodoro_Data thot = new Pomodoro_Data();
-        String database_columns = "WORKTIME INTEGER, BREAKTIME INTEGER, LONGBREAKTIME INTEGER, NUMOFSESSIONS INTEGER";
-        String database_name = "settings.db";
-        String table_name = "pomodoro_setting";
-        pomodoro_database = new Database_Helper(getActivity(), database_name, table_name, database_columns, thot);
-        ArrayList<Pomodoro_Data> list_of_times = pomodoro_database.loadDatabaseIntoArray();
-        if (list_of_times.size() == 0) {
-            Pomodoro_Data pd = new Pomodoro_Data(25, 5, 15, 4);
-            pomodoro_database.insert(pd);
-        }
-        Database.setPomodoroDatabase(pomodoro_database);
-
-        updateTimerValue();
-    }
 }
 
