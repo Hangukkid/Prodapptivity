@@ -28,7 +28,7 @@ import matthew.won.utoronto.prod.Datatypes.Task;
 
 public class View_Pager_Screen extends AppCompatActivity {
     private ViewPager view_pager;
-    private PagerAdapter pager_adapter;
+    private Pager_Adapter pager_adapter;
     private Toolbar toolbar;
 
     private SQL_Helper database;
@@ -42,7 +42,7 @@ public class View_Pager_Screen extends AppCompatActivity {
         setContentView(R.layout.view_pager_screen);
 
         view_pager = (ViewPager) findViewById(R.id.view_pager);
-        pager_adapter = new PagerAdapter (getSupportFragmentManager());
+        pager_adapter = new Pager_Adapter (getSupportFragmentManager());
         view_pager.setAdapter(pager_adapter);
         view_pager.setCurrentItem(1);
 
