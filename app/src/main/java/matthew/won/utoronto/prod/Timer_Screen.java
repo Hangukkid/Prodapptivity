@@ -28,8 +28,7 @@ import matthew.won.utoronto.prod.Database.Database;
 import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
-
-enum session_state {idle_state, focus_state, break_state, long_break_state}
+import matthew.won.utoronto.prod.Datatypes.Timer_Session_State;
 
 public class Timer_Screen extends Fragment {
 
@@ -52,7 +51,7 @@ public class Timer_Screen extends Fragment {
     private CountDownTimer count_down_timer;
     private boolean is_timer_running;
     private long time_left_in_millis;
-    private static session_state current_state;
+    private static Timer_Session_State current_state;
     private static int number_of_sessions_left;
     private static int work_length;
     private static int break_length;
@@ -97,7 +96,7 @@ public class Timer_Screen extends Fragment {
         // Pomodoro State
         database = Database.getDatabase();
         pomodoro_sql = Database.getPomodoroSQL();
-        current_state = session_state.idle_state;
+        current_state = Timer_Session_State.idle_state;
 
         wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -196,7 +195,7 @@ public class Timer_Screen extends Fragment {
             is_timer_running = false;
             updateCountDownText();
             start_pause_btn.setText("Start");
-            current_state = session_state.idle_state;
+            current_state = Timer_Session_State.idle_state;
 //        reset_btn.setVisibility(View.INVISIBLE);
 
             //turn on
@@ -248,20 +247,20 @@ public class Timer_Screen extends Fragment {
         if (time_left_in_millis != 0) {
             switch (current_state) {
                 case idle_state:
-                    current_state = session_state.focus_state;
+                    current_state = Timer_Session_State.focus_state;
                     time_left_in_millis = work_length;
                     break;
                 case focus_state:
-                    current_state = number_of_sessions_left == 0 ? session_state.long_break_state : session_state.break_state;
+                    current_state = number_of_sessions_left == 0 ? Timer_Session_State.long_break_state : Timer_Session_State.break_state;
                     time_left_in_millis = number_of_sessions_left == 0 ? long_break_length : break_length;
                     break;
                 case break_state:
-                    current_state = session_state.focus_state;
+                    current_state = Timer_Session_State.focus_state;
                     number_of_sessions_left--;
                     time_left_in_millis = work_length;
                     break;
                 case long_break_state:
-                    current_state = session_state.idle_state;
+                    current_state = Timer_Session_State.idle_state;
                     updateTimerValue();
                     break;
                 default:
