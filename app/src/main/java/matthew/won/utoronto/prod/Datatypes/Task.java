@@ -42,6 +42,8 @@ public class Task implements Stringable<Task> {
     public String getDeadline() { return deadline; }
     public void setDeadline(String deadline) { this.deadline = deadline; }
 
+    public String getSubjectID() { return subject_id; }
+    public void setSubjectID(String subject_id) { this.subject_id = subject_id; }
 
     public ArrayList<String> stringify() {
         ArrayList<String> stringified_task = new ArrayList<String>();

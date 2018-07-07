@@ -11,15 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 
 import matthew.won.utoronto.prod.Adapters.Checklist_Adapter;
+import matthew.won.utoronto.prod.Adapters.Subject_Adapter;
 import matthew.won.utoronto.prod.Database.Database;
 import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
+import matthew.won.utoronto.prod.Datatypes.Subject;
 import matthew.won.utoronto.prod.Datatypes.Task;
 
 //Website to create the list:
@@ -39,11 +41,17 @@ public class Checklist_Screen extends Fragment {
     private ArrayList<Task> checklist;
     private Checklist_Adapter task_adapter;
     private ListView checklist_view;
-    private EditText new_task_text;
+//    private EditText new_task_text;
     private Button add_task_btn;
+    private Spinner subject_pick_spinner;
+    private String default_all_subjects = "All Subjects";
 
     private SQL_Helper work_database;
     private Datatype_SQL<Task> checklist_sql;
+    private Datatype_SQL<Subject> subject_sql;
+
+    private Subject_Adapter subject_adapter;
+    private ArrayList<Subject> list_of_subjects;
 
     /****************************ACTIVITY CREATION***************************************************/
 
@@ -66,18 +74,26 @@ public class Checklist_Screen extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.checklist_screen, container, false);
         checklist_view = (ListView) view.findViewById(R.id.checklist_view);
-        new_task_text = (EditText) view.findViewById(R.id.new_task_text);
+//        new_task_text = (EditText) view.findViewById(R.id.new_task_text);
+        subject_pick_spinner = (Spinner) view.findViewById(R.id.subject_pick_spinner);
 
 
         work_database = Database.getDatabase();
         checklist_sql = Database.getTaskSQL();
+        subject_sql = Database.getSubjectSQL();
 
         checklist = work_database.loadDatabase(checklist_sql);
 
         //Need to add own "TextView" resource, not activity containing TextView
         task_adapter = new Checklist_Adapter(getActivity(), R.layout.checklist_item, checklist);
         checklist_view.setAdapter(task_adapter);
+        sortChecklist();
 
+        list_of_subjects = work_database.loadDatabase(subject_sql);
+        subject_adapter = new Subject_Adapter(getActivity(), R.layout.subject_item, list_of_subjects);
+        subject_pick_spinner.setAdapter(subject_adapter);
+
+        setupSubjectSort();
         setupListViewListener();
 
         return view;
@@ -100,6 +116,7 @@ public class Checklist_Screen extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setupSubjectSort();
     }
 
     /************************HELPER FUNCTIONS*********************************************************/
@@ -124,6 +141,7 @@ public class Checklist_Screen extends Fragment {
             }
         });
     }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -131,10 +149,10 @@ public class Checklist_Screen extends Fragment {
         if (requestCode == 2)
         {
             Task new_task = work_database.getMostRecent(checklist_sql);
-            task_adapter.add(new_task);
+            checklist.add (new_task);
+            updateAdapter();
         }
     }
-
 
     // Attaches a long click listener to the listview
     private void setupListViewListener() {
@@ -148,7 +166,7 @@ public class Checklist_Screen extends Fragment {
                     work_database.deleteData(task_to_delete.getID(), checklist_sql.TABLE_NAME);
 
                     checklist.remove(pos);
-                    task_adapter.notifyDataSetChanged();
+                    updateAdapter ();
 
                     // Return true consumes the long click event (marks it handled)
                     return true;
@@ -156,6 +174,46 @@ public class Checklist_Screen extends Fragment {
         });
     }
 
+    // Recreate the subject array if changed
+    private void setupSubjectSort () {
+        list_of_subjects = work_database.loadDatabase(subject_sql);
+        if (subject_adapter.getCount() != list_of_subjects.size() + 1) {
+            Subject all = new Subject(default_all_subjects, "0", "Transparent");
+            subject_adapter.clear();
+            subject_adapter.add(all);
+            for (Subject in : list_of_subjects) {
+                subject_adapter.add(in);
+            }
+        }
+    }
+
+    private void sortChecklist () {
+        subject_pick_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Subject subject = ((Subject) subject_pick_spinner.getSelectedItem());
+                if (subject.getSubjectName().equals(default_all_subjects)) {
+                    checklist = work_database.loadDatabase(checklist_sql);
+                } else {
+                    checklist_sql.filterby(subject.getID(), 4);
+                    checklist = work_database.filterContent(checklist_sql);
+                }
+                updateAdapter ();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+    private void updateAdapter () {
+        task_adapter.clear();
+        task_adapter.addAll(checklist);
+        task_adapter.notifyDataSetChanged();
+    }
 
 }
 

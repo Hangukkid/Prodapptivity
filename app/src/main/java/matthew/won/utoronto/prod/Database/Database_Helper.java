@@ -116,4 +116,31 @@ public class Database_Helper extends SQLiteOpenHelper {
         database.close();
         return count == 0;
     }
+
+    public ArrayList<ArrayList<String>> filterResults (String table_name, String[] column_names, String column_name, String query) {
+        ArrayList<ArrayList<String>> filtered_array = new ArrayList<>();
+        SQLiteDatabase database = getWritableDatabase();
+
+        String quot = "";
+        try {
+            Double.parseDouble(query);
+        }
+        catch (NumberFormatException e) {
+            quot = "'";
+        }
+        String to_query = "SELECT * FROM " + table_name + " WHERE " + column_name + "=" + quot + query + quot;
+        Cursor res = database.rawQuery(to_query, null);
+        if (res.getCount() == 0) {
+            return filtered_array;
+        }
+        while (res.moveToNext()) {
+            ArrayList<String> entry = new ArrayList<String>();
+            for (int i = 0; i <= column_names.length; i++) {
+                entry.add(res.getString(i));
+            }
+            filtered_array.add(entry);
+        }
+
+        return filtered_array;
+    }
 }

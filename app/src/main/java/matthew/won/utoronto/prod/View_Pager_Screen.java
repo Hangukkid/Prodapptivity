@@ -48,7 +48,7 @@ public class View_Pager_Screen extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        setupCreateDatabase("OhBaby");
+        setupCreateDatabase("OhBaby.db");
 
         android.support.v7.app.ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);

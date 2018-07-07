@@ -20,7 +20,7 @@ public class SQL_Helper {
         this.Query_List = new Pair<ArrayList<String>, ArrayList<String>>(new ArrayList<String>(), new ArrayList<String>());
         this.context = context;
         this.table_name_to_column_names = new HashMap<String, String[]>();
-        foreign_keys = false;
+        foreign_keys = true;
     }
 
     public boolean createDatabase () {
@@ -92,5 +92,21 @@ public class SQL_Helper {
 
     public void enableForeignKeys () {
         foreign_keys = true;
+    }
+
+    public <T extends Stringable<T>> ArrayList<T> filterContent (Datatype_SQL<T> Data_SQL) {
+        String query = Data_SQL.query;
+        String[] column_names = Data_SQL.COLUMN_NAMES_;
+        String column_name = Data_SQL.column_select == 0 ? "ID" : Data_SQL.COLUMN_NAMES_[Data_SQL.column_select - 1];
+        String table_name = Data_SQL.TABLE_NAME;
+        ArrayList<ArrayList<String>> filtered_array = database.filterResults(table_name, column_names, column_name, query);
+        ArrayList<T> filtered_results = new ArrayList<>();
+
+        for (ArrayList<String> to_unstringify : filtered_array) {
+            T new_data = Data_SQL.returnDummyVariable().newInstance();
+            new_data.unstringify(to_unstringify);
+            filtered_results.add(new_data);
+        }
+        return filtered_results;
     }
 }

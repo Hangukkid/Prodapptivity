@@ -56,13 +56,12 @@
             android:paddingBottom="5dp"/>
 
         <ImageView
-            android:id="@+id/myRectangleView"
+            android:id="@+id/task_subject_colour"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:src="@drawable/rectangle"
             android:background="@android:color/black"
-            />
+            android:src="@drawable/rectangle" />
 
     </LinearLayout>
 

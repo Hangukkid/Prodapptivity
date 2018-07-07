@@ -44,6 +44,8 @@ public class Subject implements Stringable<Subject> {
 
     public void setColour(String colour) { this.colour = colour; }
 
+    public Integer getColourCode() { return Colour.get_colour(colour); }
+
     public ArrayList<String> stringify() {
         ArrayList<String> stringified_task = new ArrayList<String>();
         stringified_task.add(id);

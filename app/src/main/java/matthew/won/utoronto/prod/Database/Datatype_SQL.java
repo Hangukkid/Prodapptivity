@@ -7,6 +7,8 @@ public class Datatype_SQL<dataType extends Stringable<dataType>> {
     public String TABLE_NAME;
     public String COLUMN_NAMES;
     public String[] COLUMN_NAMES_;
+    public String query;
+    public Integer column_select;
 
     private dataType type;
 
@@ -14,6 +16,8 @@ public class Datatype_SQL<dataType extends Stringable<dataType>> {
         TABLE_NAME = table_name;
         this.type = type;
         setupTables();
+        this.query = "";
+        this.column_select = -1;
     }
 
     private void setupTables () {
@@ -29,6 +33,11 @@ public class Datatype_SQL<dataType extends Stringable<dataType>> {
 
     public dataType returnDummyVariable () {
         return type;
+    }
+
+    public void filterby (String query, Integer column_select) {
+        this.query = query;
+        this.column_select = column_select;
     }
 
 }
