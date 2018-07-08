@@ -1,7 +1,7 @@
 package matthew.won.utoronto.prod;
 
-import android.content.Intent;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,11 +14,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Button;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import matthew.won.utoronto.prod.Adapters.Checklist_Adapter;
+import matthew.won.utoronto.prod.Database.Database;
+import matthew.won.utoronto.prod.Database.Datatype_SQL;
+import matthew.won.utoronto.prod.Database.SQL_Helper;
+import matthew.won.utoronto.prod.Datatypes.Task;
 
 public class Calendar_Screen extends Fragment {
 
@@ -26,10 +35,7 @@ public class Calendar_Screen extends Fragment {
 
     private LinearLayout linear_layout;
 
-
     private RelativeLayout top_view_group;
-    private CalendarView calendar_view;
-    private ListView checklist_view;
     private boolean shown;
     private GestureDetector mDetector;
     private int max_height;
@@ -37,6 +43,13 @@ public class Calendar_Screen extends Fragment {
     private int list_view_height;
     private boolean height_init = false;
     Button subject_make_btn;
+
+    private SQL_Helper database;
+    private Datatype_SQL<Task> checklist_sql;
+    private CalendarView calendar_view;
+    private ListView calendar_list_view;
+    private ArrayList<Task> checklist;
+    private Checklist_Adapter task_adapter;
 
     /****************************ACTIVITY CREATION***************************************************/
 
@@ -61,8 +74,34 @@ public class Calendar_Screen extends Fragment {
 //        checklist_view = (ListView) view.findViewById(R.id.checklist_view);
         linear_layout = (LinearLayout) view.findViewById(R.id.linear_layout);
         calendar_view = (CalendarView) view.findViewById(R.id.calendar_view);
+        calendar_list_view = (ListView) view.findViewById(R.id.calendar_list_view);
         shown = false;
         start_height = 0;
+        database = Database.getDatabase();
+        checklist_sql = Database.getTaskSQL();
+
+        checklist = new ArrayList<>();
+        task_adapter = new Checklist_Adapter(getActivity(), R.layout.checklist_item, checklist);
+        calendar_list_view.setAdapter(task_adapter);
+
+        Calendar c = Calendar.getInstance();
+        String today = Database.dateTimeFormat(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+        setupListView(today);
+
+        calendar_view.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
+                String selected_day = Database.dateTimeFormat(year, month, day);
+                setupListView(selected_day);
+            }
+        });
+
+
+        for (int i = 0; i < linear_layout.getChildCount(); i++) {
+            View v = linear_layout.getChildAt(i);
+            v.setEnabled(false);
+        }
+//        calendar_list_view.setVisibility(View.GONE);
 
         return view;
     }
@@ -114,7 +153,7 @@ public class Calendar_Screen extends Fragment {
     /************************HELPER FUNCTIONS*********************************************************/
 
 
-    public static void expand(final View v, int duration, int targetHeight) {
+    public void expand(final View v, int duration, int targetHeight) {
 
         int prevHeight = v.getHeight();
 
@@ -130,9 +169,11 @@ public class Calendar_Screen extends Fragment {
         valueAnimator.setInterpolator(new DecelerateInterpolator());
         valueAnimator.setDuration(duration);
         valueAnimator.start();
+
+//        calendar_list_view.setVisibility(View.VISIBLE);
     }
 
-    public static void collapse(final View v, int duration, int targetHeight) {
+    public void collapse(final View v, int duration, int targetHeight) {
         int prevHeight = v.getHeight();
         ValueAnimator valueAnimator = ValueAnimator.ofInt(prevHeight, targetHeight);
         valueAnimator.setInterpolator(new DecelerateInterpolator());
@@ -146,8 +187,11 @@ public class Calendar_Screen extends Fragment {
         valueAnimator.setInterpolator(new DecelerateInterpolator());
         valueAnimator.setDuration(duration);
         valueAnimator.start();
+
+//        calendar_list_view.setVisibility(View.GONE);
     }
 
+    // Make activity for subejct page
     private void makeSubjectPage() {
         subject_make_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,6 +200,14 @@ public class Calendar_Screen extends Fragment {
                 startActivity(subjects);
             }
         });
+    }
+
+    private void setupListView (String date) {
+        checklist_sql.filterby(date, 3);
+        checklist = database.filterContent(checklist_sql);
+        task_adapter.clear();
+        task_adapter.addAll(checklist);
+        task_adapter.notifyDataSetChanged();
     }
 
 

@@ -23,6 +23,8 @@ import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Subject;
 import matthew.won.utoronto.prod.Datatypes.Task;
 
+import static android.app.Activity.RESULT_OK;
+
 //Website to create the list:
 //https://guides.codepath.com/android/Basic-Todo-App-Tutorial
 
@@ -134,7 +136,7 @@ public class Checklist_Screen extends Fragment {
 //                    task_adapter.add(new_task);
 //                }
                 Intent create_task = new Intent(getActivity(), Create_Task.class);
-                startActivityForResult(create_task, 2);
+                startActivityForResult(create_task, 0);
             }
         });
     }
@@ -143,11 +145,21 @@ public class Checklist_Screen extends Fragment {
     {
         super.onActivityResult(requestCode, resultCode, data);
         // check if the request code is same as what is passed  here it is 2
-        if (requestCode == 2)
-        {
-            Task new_task = work_database.getMostRecent(checklist_sql);
-            checklist.add (new_task);
-            updateAdapter();
+        switch (requestCode) {
+            case 0:
+                Subject subject = ((Subject) subject_pick_spinner.getSelectedItem());
+                if (resultCode == RESULT_OK) {
+                    boolean put_in_adapter = data.getStringExtra("subject_id").equals(subject.getID()) ||
+                                                subject.getSubjectName().equals(default_all_subjects);
+                    if (put_in_adapter) {
+                        Task new_task = work_database.getMostRecent(checklist_sql);
+                        checklist.add(new_task);
+                        updateAdapter();
+                    }
+                }
+                break;
+            default:
+                break;
         }
     }
 

@@ -11,6 +11,7 @@ public class Task implements Stringable<Task> {
     private String id;
     private String task_name;
     private String description;
+    private String start_date;
     private String deadline;
     private String subject_id;
 
@@ -18,9 +19,10 @@ public class Task implements Stringable<Task> {
 
     }
 
-    public Task (String task_name, String description, String deadline, String subject_id){
+    public Task (String task_name, String description, String start_date, String deadline, String subject_id){
         this.task_name = task_name;
         this.description = description;
+        this.start_date = start_date;
         this.deadline = deadline;
         this.subject_id = subject_id;
     }
@@ -66,7 +68,7 @@ public class Task implements Stringable<Task> {
     }
 
     public String getDatabaseForum() {
-        return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE TEXT, SUBJECT_ID INTEGER NOT NULL, FOREIGN KEY (SUBJECT_ID) REFERENCES subjects(ID) ON DELETE CASCADE";
+        return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE INTEGER, SUBJECT_ID INTEGER NOT NULL, FOREIGN KEY (SUBJECT_ID) REFERENCES subjects(ID) ON DELETE CASCADE";
     }
 
     public static void createTable (String table_name) {

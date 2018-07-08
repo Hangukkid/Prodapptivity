@@ -40,10 +40,8 @@ public class Checklist_Adapter extends ArrayAdapter<Task> {
 
         task_name_text.setText(task.getTask_name());
         task_description_text.setText(task.getDescription());
-        due_date.setText(task.getDeadline());
+        due_date.setText(Database.prettyDateTimeFormat(task.getDeadline()));
 
-        //find way to relate task to subject and inject colour
-        // also figure out why the filter isn't working
         SQL_Helper database = Database.getDatabase();
         Datatype_SQL<Subject> subject_sql = Database.getSubjectSQL();
         subject_sql.filterby(task.getSubjectID(), 0);

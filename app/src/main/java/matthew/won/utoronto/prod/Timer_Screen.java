@@ -62,7 +62,6 @@ public class Timer_Screen extends Fragment {
 
 
 
-
     /****************************ACTIVITY CREATION***************************************************/
     public static Timer_Screen newInstance(){
         Timer_Screen fragment = new Timer_Screen();
@@ -225,7 +224,7 @@ public class Timer_Screen extends Fragment {
         ArrayList<Pomodoro_Data> res = database.loadDatabase(pomodoro_sql);
         Pomodoro_Data current_config = res.get(0);
         if (res.size() == 0) {
-            Toast.makeText(getActivity(), "Nothing Here", Toast.LENGTH_LONG).show();
+            Database.showPopup(getActivity(), "Nothing Here");
             return;
         }
         else {
@@ -264,7 +263,7 @@ public class Timer_Screen extends Fragment {
                     updateTimerValue();
                     break;
                 default:
-                    Toast.makeText(getActivity(), "Error: Next State is Undefined", Toast.LENGTH_LONG).show();
+                    Database.showPopup(getActivity(), "Error: Next State is Undefined");
             }
         }
         startTimer();

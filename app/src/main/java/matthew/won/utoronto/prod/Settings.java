@@ -1,12 +1,10 @@
 package matthew.won.utoronto.prod;
 
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -57,10 +55,10 @@ public class Settings extends AppCompatActivity {
 
                 boolean isUpdate = database.updateData(pd, Database.getPomodoroSQL().TABLE_NAME);
                 if (isUpdate) {
-                    Toast.makeText(Settings.this, "Data Updated", Toast.LENGTH_LONG).show();
+                    Database.showPopup(Settings.this, "Data Updated");
                 }
                 else
-                    Toast.makeText(Settings.this, "Data Not Updated", Toast.LENGTH_LONG).show();
+                    Database.showPopup(Settings.this, "Data Not Updated");
 
             }
         });
@@ -72,7 +70,7 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
                 ArrayList<Pomodoro_Data> res = database.loadDatabase(Database.getPomodoroSQL());
                 if (res.size() == 0) {
-                    showMessage("Error", "Nothing found");
+                    Database.showMessage(Settings.this, "Error", "Nothing found");
                     return;
                 }
                 StringBuffer buffer = new StringBuffer();
@@ -82,17 +80,9 @@ public class Settings extends AppCompatActivity {
                     buffer.append("Long Break Session Length : " + Integer.toString(t.long_break_time) + "\n");
                     buffer.append("Number of Sessions : " + Integer.toString(t.number_of_sessoions) + "\n\n");
                 }
-                showMessage("Data", buffer.toString());
+                Database.showMessage(Settings.this,"Data", buffer.toString());
             }
         });
-    }
-
-    public void showMessage (String title, String Message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        builder.setMessage(Message);
-        builder.show();
     }
 
 }

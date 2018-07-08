@@ -1,5 +1,13 @@
 package matthew.won.utoronto.prod.Database;
 
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
+
+import java.sql.Date;
+import java.text.DateFormat;
+import java.util.Calendar;
+
 import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
 import matthew.won.utoronto.prod.Datatypes.Subject;
 import matthew.won.utoronto.prod.Datatypes.Task;
@@ -51,4 +59,40 @@ public final class Database {
     }
     public static void setTaskSQL (Datatype_SQL<Task> SQL) { task_sql = SQL; }
 
+    //Create a Message
+    public static void showMessage (Context context, String title, String Message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(Message);
+        builder.show();
+    }
+
+    public static void showPopup (Context context, String text) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+    }
+
+    public static String dateTimeFormat (int year, int month, int day) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, day);
+        Date date = new Date(c.getTimeInMillis());
+        return date.toString();
+    }
+
+    private static String prettyDateTimeFormat (int year, int month, int day) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, day);
+        return DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+    }
+
+    public static String prettyDateTimeFormat (String date) {
+        int year = Integer.parseInt(date.substring(0,4));
+        int month = Integer.parseInt(date.substring(5,7));
+        int day = Integer.parseInt(date.substring(8));
+        return prettyDateTimeFormat(year, month - 1, day);
+    }
 }
