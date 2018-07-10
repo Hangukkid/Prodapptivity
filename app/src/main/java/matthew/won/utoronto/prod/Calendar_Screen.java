@@ -18,6 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+/*
+Add in adapter to the list_view
+ */
+
+
 public class Calendar_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
