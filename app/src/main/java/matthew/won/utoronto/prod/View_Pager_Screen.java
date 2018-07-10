@@ -7,6 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 
+import matthew.won.utoronto.prod.Adapters.Pager_Adapter;
+import matthew.won.utoronto.prod.Database.Database;
+import matthew.won.utoronto.prod.Database.Datatype_SQL;
+import matthew.won.utoronto.prod.Database.SQL_Helper;
+import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
+import matthew.won.utoronto.prod.Datatypes.Subject;
+import matthew.won.utoronto.prod.Datatypes.Task;
+
 
 
 /*TO DO:
@@ -20,8 +28,13 @@ import android.view.WindowManager;
 
 public class View_Pager_Screen extends AppCompatActivity {
     private ViewPager view_pager;
-    private PagerAdapter pager_adapter;
+    private Pager_Adapter pager_adapter;
     private Toolbar toolbar;
+
+    private SQL_Helper database;
+    private Datatype_SQL<Task> checklist_sql;
+    private Datatype_SQL<Subject> subject_sql;
+    private Datatype_SQL<Pomodoro_Data> pomodoro_sql;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,12 +42,14 @@ public class View_Pager_Screen extends AppCompatActivity {
         setContentView(R.layout.view_pager_screen);
 
         view_pager = (ViewPager) findViewById(R.id.view_pager);
-        pager_adapter = new PagerAdapter (getSupportFragmentManager());
+        pager_adapter = new Pager_Adapter (getSupportFragmentManager());
         view_pager.setAdapter(pager_adapter);
         view_pager.setCurrentItem(1);
 
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+
+        setupCreateDatabase("OhBaby.db");
 
         android.support.v7.app.ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
@@ -54,5 +69,32 @@ public class View_Pager_Screen extends AppCompatActivity {
             case 2:
                 view_pager.setCurrentItem(1);
         }
+    }
+
+    private void setupCreateDatabase (String database_name) {
+        SQL_Helper database = new SQL_Helper(database_name, this);
+        Database.setDatabase(database);
+
+        String pomodoro_table_name = "pomodoro_setting";
+        String task_table_name = "tasks";
+        String subject_table_name = "subjects";
+
+        Task.createTable(task_table_name);
+        Subject.createTable(subject_table_name);
+        Pomodoro_Data.createTable(pomodoro_table_name);
+
+        database.createDatabase();
+
+        if (database.isDatabaseEmpty(pomodoro_table_name)) {
+            Pomodoro_Data initial = new Pomodoro_Data(25, 5, 15, 4);
+            database.insertData(initial, pomodoro_table_name);
+        }
+        Subject test_1 = new Subject ("ECE212", "5", "Black");
+        Subject test_2 = new Subject ("ECE244", "6", "Red");
+        Subject test_3 = new Subject ("ECE297", "8", "Green");
+
+        database.insertData(test_1, subject_table_name);
+        database.insertData(test_2, subject_table_name);
+        database.insertData(test_3, subject_table_name);
     }
 }
