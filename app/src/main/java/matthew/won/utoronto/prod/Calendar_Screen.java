@@ -16,7 +16,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -29,11 +28,15 @@ import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Task;
 
+/*
+Chris: research dynamic size of views; when expanding, that becomes the NEW height so research into that. You just want to make the listview scrollable
+ */
+
 public class Calendar_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
 
-    private LinearLayout linear_layout;
+    private RelativeLayout relative_layout;
 
     private RelativeLayout top_view_group;
     private boolean shown;
@@ -41,6 +44,8 @@ public class Calendar_Screen extends Fragment {
     private int max_height;
     private int start_height;
     private int list_view_height;
+    private int animation_speed;
+    private int height_offset;
     private boolean height_init = false;
     Button subject_make_btn;
 
@@ -71,14 +76,20 @@ public class Calendar_Screen extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.calendar_screen, container, false);
         top_view_group = (RelativeLayout) view.findViewById(R.id.top_view_group);
-//        checklist_view = (ListView) view.findViewById(R.id.checklist_view);
-        linear_layout = (LinearLayout) view.findViewById(R.id.linear_layout);
+        relative_layout = (RelativeLayout) view.findViewById(R.id.relative_layout);
         calendar_view = (CalendarView) view.findViewById(R.id.calendar_view);
         calendar_list_view = (ListView) view.findViewById(R.id.calendar_list_view);
+
+        //If shown is false, do not collapse;
         shown = false;
         start_height = 0;
+        animation_speed = 400;
+        height_offset = 60;
+
+
         database = Database.getDatabase();
         checklist_sql = Database.getTaskSQL();
+
 
         checklist = new ArrayList<>();
         task_adapter = new Checklist_Adapter(getActivity(), R.layout.checklist_item, checklist);
@@ -97,8 +108,8 @@ public class Calendar_Screen extends Fragment {
         });
 
 
-        for (int i = 0; i < linear_layout.getChildCount(); i++) {
-            View v = linear_layout.getChildAt(i);
+        for (int i = 0; i < relative_layout.getChildCount(); i++) {
+            View v = relative_layout.getChildAt(i);
             v.setEnabled(false);
         }
 //        calendar_list_view.setVisibility(View.GONE);
@@ -108,6 +119,8 @@ public class Calendar_Screen extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        //Used to retrieve and save heights of a particular view
         top_view_group.setVisibility(View.VISIBLE);
         top_view_group.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         final ViewTreeObserver observer = top_view_group.getViewTreeObserver();
@@ -119,12 +132,13 @@ public class Calendar_Screen extends Fragment {
                     }
                 });
 
-        final ViewTreeObserver observer2 = linear_layout.getViewTreeObserver();
+        //Used to retrieve and save heights of a particular view
+        final ViewTreeObserver observer2 = relative_layout.getViewTreeObserver();
         observer2.addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        list_view_height = linear_layout.getHeight();
+                        list_view_height = relative_layout.getHeight();
                     }
                 });
 
@@ -135,7 +149,7 @@ public class Calendar_Screen extends Fragment {
         The warning is for visually impaired people because the UI views are set up with feedback to help them
         navigate through the app. Welp sucks for blind people
          */
-        linear_layout.setOnTouchListener(new View.OnTouchListener() {
+        relative_layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d("Touch", "Touch occurred");
@@ -152,7 +166,7 @@ public class Calendar_Screen extends Fragment {
 
     /************************HELPER FUNCTIONS*********************************************************/
 
-
+    //Function to expand list view upon swipe up
     public void expand(final View v, int duration, int targetHeight) {
 
         int prevHeight = v.getHeight();
@@ -170,9 +184,9 @@ public class Calendar_Screen extends Fragment {
         valueAnimator.setDuration(duration);
         valueAnimator.start();
 
-//        calendar_list_view.setVisibility(View.VISIBLE);
     }
 
+    //Function to collapse list view upon swipe down
     public void collapse(final View v, int duration, int targetHeight) {
         int prevHeight = v.getHeight();
         ValueAnimator valueAnimator = ValueAnimator.ofInt(prevHeight, targetHeight);
@@ -191,7 +205,7 @@ public class Calendar_Screen extends Fragment {
 //        calendar_list_view.setVisibility(View.GONE);
     }
 
-    // Make activity for subejct page
+    // Make activity for subject page
     private void makeSubjectPage() {
         subject_make_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,8 +225,9 @@ public class Calendar_Screen extends Fragment {
     }
 
 
+    //Custom GestureListener class to determine what happens when swipe occurs
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        private static final int SWIPE_MIN_DISTANCE = 65;
+        private static final int SWIPE_MIN_DISTANCE = 15;
         private static final int SWIPE_THRESHOLD_VELOCITY = 150;
 
         @Override
@@ -259,7 +274,8 @@ public class Calendar_Screen extends Fragment {
 
             if (!shown) {
                 shown = true;
-                expand(linear_layout, 300, max_height);
+                expand(relative_layout, animation_speed, max_height);
+                expand(calendar_list_view, animation_speed, max_height-height_offset);
             }
         }
 
@@ -268,7 +284,8 @@ public class Calendar_Screen extends Fragment {
 
             if (shown) {
                 shown = false;
-                collapse(linear_layout, 300, start_height);
+                collapse(relative_layout, animation_speed, start_height);
+                collapse(calendar_list_view, animation_speed, start_height-height_offset);
             }
         }
     }
