@@ -16,6 +16,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -30,15 +31,25 @@ import matthew.won.utoronto.prod.Datatypes.Task;
 
 /*
 Chris: research dynamic size of views; when expanding, that becomes the NEW height so research into that. You just want to make the listview scrollable
+        -Used max_heights and offsets to set how far the screen moves. Will be different on various mobile device sizes
+        -List in calendar view is not scrollable, but checklist view is.
+            -When adding random items to calendar view, they are scrollable. It's just the newly added tasks that are not
+            -Changed listview height to fill_parent. try that out
+
+
+
+   * Also items don't save when you exit the app
+   *
  */
 
 public class Calendar_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
 
-    private RelativeLayout relative_layout;
 
     private RelativeLayout top_view_group;
+    private ListView calendar_list_view;
+    private LinearLayout sliding_layout;
     private boolean shown;
     private GestureDetector mDetector;
     private int max_height;
@@ -52,7 +63,6 @@ public class Calendar_Screen extends Fragment {
     private SQL_Helper database;
     private Datatype_SQL<Task> checklist_sql;
     private CalendarView calendar_view;
-    private ListView calendar_list_view;
     private ArrayList<Task> checklist;
     private Checklist_Adapter task_adapter;
 
@@ -76,7 +86,7 @@ public class Calendar_Screen extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.calendar_screen, container, false);
         top_view_group = (RelativeLayout) view.findViewById(R.id.top_view_group);
-        relative_layout = (RelativeLayout) view.findViewById(R.id.relative_layout);
+        sliding_layout = (LinearLayout) view.findViewById(R.id.sliding_layout);
         calendar_view = (CalendarView) view.findViewById(R.id.calendar_view);
         calendar_list_view = (ListView) view.findViewById(R.id.calendar_list_view);
 
@@ -93,7 +103,6 @@ public class Calendar_Screen extends Fragment {
 
         checklist = new ArrayList<>();
         task_adapter = new Checklist_Adapter(getActivity(), R.layout.checklist_item, checklist);
-        calendar_list_view.setAdapter(task_adapter);
 
         Calendar c = Calendar.getInstance();
         String today = Database.dateTimeFormat(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -108,11 +117,12 @@ public class Calendar_Screen extends Fragment {
         });
 
 
-        for (int i = 0; i < relative_layout.getChildCount(); i++) {
-            View v = relative_layout.getChildAt(i);
-            v.setEnabled(false);
+        for (int i = 0; i < sliding_layout.getChildCount(); i++) {
+            View v = sliding_layout.getChildAt(i);
+            v.setEnabled(true);
         }
 //        calendar_list_view.setVisibility(View.GONE);
+        calendar_list_view.setAdapter(task_adapter);
 
         return view;
     }
@@ -133,12 +143,12 @@ public class Calendar_Screen extends Fragment {
                 });
 
         //Used to retrieve and save heights of a particular view
-        final ViewTreeObserver observer2 = relative_layout.getViewTreeObserver();
+        final ViewTreeObserver observer2 = sliding_layout.getViewTreeObserver();
         observer2.addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        list_view_height = relative_layout.getHeight();
+                        list_view_height = sliding_layout.getHeight();
                     }
                 });
 
@@ -149,7 +159,7 @@ public class Calendar_Screen extends Fragment {
         The warning is for visually impaired people because the UI views are set up with feedback to help them
         navigate through the app. Welp sucks for blind people
          */
-        relative_layout.setOnTouchListener(new View.OnTouchListener() {
+        sliding_layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d("Touch", "Touch occurred");
@@ -157,6 +167,29 @@ public class Calendar_Screen extends Fragment {
                 return true;
             }
         });
+
+                // Defined Array values to show in ListView
+//        String[] values = new String[] { "Android List View",
+//                "Adapter implementation",
+//                "Simple List View In Android",
+//                "Create List View Android",
+//                "Android Example",
+//                "List View Source Code",
+//                "List View Array Adapter",
+//                "Android Example List View"
+//        };
+//
+//        // Define a new Adapter
+//        // First parameter - Context
+//        // Second parameter - Layout for the row
+//        // Third parameter - ID of the TextView to which the data is written
+//        // Forth - the Array of data
+//
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+//                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+//
+//        // Assign adapter to ListView
+//        calendar_list_view.setAdapter(adapter);
 
         subject_make_btn = (Button) view.findViewById(R.id.subject_make_btn);
         makeSubjectPage();
@@ -269,12 +302,13 @@ public class Calendar_Screen extends Fragment {
         public void onLeftToRight() {
         }
 
+        //Used max_heights and offsets to set how far the screen moves. Will be different on various mobile device sizes
         public void onBottomToTop() {
             Log.d("Touch", "Expand occurred");
 
             if (!shown) {
                 shown = true;
-                expand(relative_layout, animation_speed, max_height);
+                expand(sliding_layout, animation_speed, max_height);
                 expand(calendar_list_view, animation_speed, max_height-height_offset);
             }
         }
@@ -284,7 +318,7 @@ public class Calendar_Screen extends Fragment {
 
             if (shown) {
                 shown = false;
-                collapse(relative_layout, animation_speed, start_height);
+                collapse(sliding_layout, animation_speed, start_height);
                 collapse(calendar_list_view, animation_speed, start_height-height_offset);
             }
         }
