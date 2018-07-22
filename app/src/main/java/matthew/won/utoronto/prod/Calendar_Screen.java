@@ -30,15 +30,6 @@ import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Task;
 
 /*
-Chris: research dynamic size of views; when expanding, that becomes the NEW height so research into that. You just want to make the listview scrollable
-        -Used max_heights and offsets to set how far the screen moves. Will be different on various mobile device sizes
-        -List in calendar view is not scrollable, but checklist view is.
-            -When adding random items to calendar view, they are scrollable. It's just the newly added tasks that are not
-            -Changed listview height to fill_parent. try that out
-
-
-
-   * Also items don't save when you exit the app
    *
  */
 
@@ -168,28 +159,6 @@ public class Calendar_Screen extends Fragment {
             }
         });
 
-                // Defined Array values to show in ListView
-//        String[] values = new String[] { "Android List View",
-//                "Adapter implementation",
-//                "Simple List View In Android",
-//                "Create List View Android",
-//                "Android Example",
-//                "List View Source Code",
-//                "List View Array Adapter",
-//                "Android Example List View"
-//        };
-//
-//        // Define a new Adapter
-//        // First parameter - Context
-//        // Second parameter - Layout for the row
-//        // Third parameter - ID of the TextView to which the data is written
-//        // Forth - the Array of data
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-//                android.R.layout.simple_list_item_1, android.R.id.text1, values);
-//
-//        // Assign adapter to ListView
-//        calendar_list_view.setAdapter(adapter);
 
         subject_make_btn = (Button) view.findViewById(R.id.subject_make_btn);
         makeSubjectPage();

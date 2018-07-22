@@ -2,6 +2,7 @@ package matthew.won.utoronto.prod;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,18 +19,18 @@ import matthew.won.utoronto.prod.Datatypes.Task;
 
 
 /*TO DO:
- * Swipe up on calendar screen
- * Fix toolbar back button
  * Media Player
  * Other UI stuff?
  * Adding animations to add tasks is super easy
- * Issue with adding tasks on checklist
+ *
+ *
  */
 
 public class View_Pager_Screen extends AppCompatActivity {
     private ViewPager view_pager;
     private Pager_Adapter pager_adapter;
     private Toolbar toolbar;
+    private TabLayout tab_layout;
 
     private SQL_Helper database;
     private Datatype_SQL<Task> checklist_sql;
@@ -41,9 +42,15 @@ public class View_Pager_Screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_pager_screen);
 
+
+        pager_adapter = new Pager_Adapter(getSupportFragmentManager());
         view_pager = (ViewPager) findViewById(R.id.view_pager);
-        pager_adapter = new Pager_Adapter (getSupportFragmentManager());
         view_pager.setAdapter(pager_adapter);
+
+
+        tab_layout = (TabLayout) findViewById(R.id.tab_layout);
+
+        tab_layout.setupWithViewPager(view_pager);
         view_pager.setCurrentItem(1);
 
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -54,6 +61,8 @@ public class View_Pager_Screen extends AppCompatActivity {
         android.support.v7.app.ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
     }
 
 
@@ -71,7 +80,7 @@ public class View_Pager_Screen extends AppCompatActivity {
         }
     }
 
-    private void setupCreateDatabase (String database_name) {
+    private void setupCreateDatabase(String database_name) {
         SQL_Helper database = new SQL_Helper(database_name, this);
         Database.setDatabase(database);
 
@@ -89,9 +98,9 @@ public class View_Pager_Screen extends AppCompatActivity {
             Pomodoro_Data initial = new Pomodoro_Data(25, 5, 15, 4);
             database.insertData(initial, pomodoro_table_name);
         }
-        Subject test_1 = new Subject ("ECE212", "5", "Black");
-        Subject test_2 = new Subject ("ECE244", "6", "Red");
-        Subject test_3 = new Subject ("ECE297", "8", "Green");
+        Subject test_1 = new Subject("ECE212", "5", "Black");
+        Subject test_2 = new Subject("ECE244", "6", "Red");
+        Subject test_3 = new Subject("ECE297", "8", "Green");
 
         database.insertData(test_1, subject_table_name);
         database.insertData(test_2, subject_table_name);

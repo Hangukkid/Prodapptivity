@@ -11,6 +11,8 @@ import matthew.won.utoronto.prod.Timer_Screen;
 public class Pager_Adapter extends FragmentPagerAdapter {
     private static final int NUM_PAGES = 3;
 
+    private String[] titles = {"Checklist", "Calendar", "Timer" };
+
     public Pager_Adapter(FragmentManager fm){
         super(fm);
     }
@@ -33,5 +35,10 @@ public class Pager_Adapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return NUM_PAGES;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return titles[position];
     }
 }
