@@ -33,6 +33,11 @@ import matthew.won.utoronto.prod.Datatypes.Task;
    *
  */
 
+/*
+Add in adapter to the list_view
+ */
+
+
 public class Calendar_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
