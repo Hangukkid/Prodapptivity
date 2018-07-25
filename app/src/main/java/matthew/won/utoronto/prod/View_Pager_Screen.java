@@ -1,11 +1,14 @@
 package matthew.won.utoronto.prod;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 
 import matthew.won.utoronto.prod.Adapters.Pager_Adapter;
@@ -20,10 +23,11 @@ import matthew.won.utoronto.prod.Datatypes.Task;
 
 /*TO DO:
  * Media Player
- * Other UI stuff?
- * Adding animations to add tasks is super easy
- *
- *
+ * Move timer inside countdown circle
+ * See if I can edit the timer settings labels (and figure out what does what)
+ * Do something about the subject button in calendar
+ * Look into how toolbar works
+ * Make checkist item more aesthetic (do research online)
  */
 
 public class View_Pager_Screen extends AppCompatActivity {
@@ -47,7 +51,6 @@ public class View_Pager_Screen extends AppCompatActivity {
         view_pager = (ViewPager) findViewById(R.id.view_pager);
         view_pager.setAdapter(pager_adapter);
 
-
         tab_layout = (TabLayout) findViewById(R.id.tab_layout);
 
         tab_layout.setupWithViewPager(view_pager);
@@ -55,6 +58,7 @@ public class View_Pager_Screen extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+
 
         setupCreateDatabase("OhBaby.db");
 
@@ -65,6 +69,30 @@ public class View_Pager_Screen extends AppCompatActivity {
 
     }
 
+    /*********************SETTINGS OPTIONS ON TOOLBAR************************************/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //Inflating menu items to toolbar - Attaching toolbar items to toolbar
+        getMenuInflater().inflate(R.menu.menu_items, menu);
+
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent settings = new Intent(this, Settings.class);
+                startActivity(settings);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /*********************SETTINGS OPTIONS ON TOOLBAR************************************/
 
     //Temporary backstack, need to implement the full version later
     @Override
