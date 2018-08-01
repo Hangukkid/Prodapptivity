@@ -29,9 +29,6 @@ import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Task;
 
-/*
-Set up animation so that the button appears and disappears through fading when list swipes up and down respectively
- */
 
 public class Calendar_Screen extends Fragment {
 
@@ -86,7 +83,6 @@ public class Calendar_Screen extends Fragment {
         start_height = 0;
         animation_speed = 400;
         height_offset = 60;
-
 
         database = Database.getDatabase();
         checklist_sql = Database.getTaskSQL();

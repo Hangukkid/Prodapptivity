@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,17 @@ import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
 import matthew.won.utoronto.prod.Datatypes.Timer_Session_State;
 
+/*
+To make the new saved settings take effect, you have to press "Reset" first
+The first time you make changes to the settings, you have to press "start" and then "reset"
+there is a bug when you try to set the initial start time to 0
+progress bar does not countdown
+consider the problem when the user switches screens, and the system handles that by restarting the activity (need to confirm)
+   so having a media player run in the background might do the trick. see "Using media player in a service"
+
+When running pausing the timer (for testing purposes) the media player would have loaded and ready to play, but the code exits the pause code too fast for it to play anything
+ */
+
 public class Timer_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
@@ -38,12 +50,13 @@ public class Timer_Screen extends Fragment {
     private SQL_Helper database;
     private Datatype_SQL<Pomodoro_Data> pomodoro_sql;
     private NotificationManager mNotificationManager;
+    private long starting_time;
 
     private TextView timer_value;
     private Button start_pause_btn;
     private Button reset_btn;
-    private Button settings_btn;
 
+    private MediaPlayer media_player;
     private CountDownTimer count_down_timer;
     private boolean is_timer_running;
     private long time_left_in_millis;
@@ -78,13 +91,6 @@ public class Timer_Screen extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.timer_screen, container, false);
 
-        //Super allows us to run existing code from an inherited class on top of the code we are going to write
-
-        //Setting up media player
-//        media_player = MediaPlayer.create(getApplicationContext(), R.raw.see_you_again);
-
-
-
         // Notification manager
         mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -95,6 +101,8 @@ public class Timer_Screen extends Fragment {
 
         wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
+        starting_time = 1;
+
         return view;
     }
 
@@ -104,9 +112,15 @@ public class Timer_Screen extends Fragment {
         timer_value = (TextView) view.findViewById(R.id.timer_value);
 
         progress_bar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        progress_bar.setScaleX(-1);
+        progress_bar.setScaleY(1);
+        progress_bar.setTranslationX(1); //To place everything back where it was originally.
+
         start_pause_btn = (Button) view.findViewById(R.id.start_pause_btn);
         reset_btn = (Button) view.findViewById(R.id.reset_btn);
-//        settings_btn = (Button) view.findViewById(R.id.settings_btn);
+
+//        media_player = MediaPlayer.create(getActivity(), R.raw.alarm);
+//        media_player.start();
 
         //Clicking the button will start the timer
         //If start is pressed, the button will change to "Pause"
@@ -130,13 +144,6 @@ public class Timer_Screen extends Fragment {
             }
         });
 
-//        settings_btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent settings = new Intent(getActivity(), Settings.class);
-//                startActivity(settings);
-//            }
-//        });
         updateTimerValue();
         updateCountDownText();
     }
@@ -157,6 +164,10 @@ public class Timer_Screen extends Fragment {
 
             @Override
             public void onFinish() {
+//                if (media_player == null) {
+//                    media_player = MediaPlayer.create(getActivity(), R.raw.alarm);
+//                    media_player.start();
+//                }
                 AlertDialog dialog = createDialog().create();
                 dialog.show();
             }
@@ -165,7 +176,6 @@ public class Timer_Screen extends Fragment {
         is_timer_running = true;
         start_pause_btn.setText("Pause");
 
-//        reset_btn.setVisibility(View.INVISIBLE);
 
         // turn off
         wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -175,23 +185,31 @@ public class Timer_Screen extends Fragment {
         updateDNDSettings(NotificationManager.INTERRUPTION_FILTER_NONE);
     }
 
-    // will remove this functionality
     private void pauseTimer(){
         count_down_timer.cancel();
         is_timer_running = false;
         start_pause_btn.setText("Start");
-//        reset_btn.setVisibility(View.VISIBLE);
+//        MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.alarm);
+//        mediaPlayer.start();
     }
 
     private void resetTimer() {
         if (count_down_timer != null) {
             count_down_timer.cancel();
-            updateTimerValue();
+
             is_timer_running = false;
+
+            updateTimerValue();
             updateCountDownText();
+
             start_pause_btn.setText("Start");
             current_state = Timer_Session_State.idle_state;
 //        reset_btn.setVisibility(View.INVISIBLE);
+
+//            if (media_player != null) {
+//                media_player.release();
+//                media_player = null;
+//            }
 
             //turn on
             wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -211,8 +229,19 @@ public class Timer_Screen extends Fragment {
         timer_value.setText(time_left_formatted);
 
         //Need access to the starting time
-        long starting_time = time_left_in_millis;
-        progress_bar.setProgress((int) (time_left_in_millis/starting_time)*100);
+
+
+
+        double percentage = ((double)time_left_in_millis/(double)starting_time)*100;
+        int progress = (int) percentage;
+
+//        Log.d("timer", "Current time left is: " + time_left_in_millis);
+//        Log.d("timer", "Start time left is: " + starting_time);
+//        Log.d("timer", "Percentage is: " + percentage);
+//        Log.d("timer", "Progress is: " + progress);
+
+        progress_bar.setProgress(progress);
+
     }
 
     private void updateTimerValue () {
@@ -244,15 +273,18 @@ public class Timer_Screen extends Fragment {
                 case idle_state:
                     current_state = Timer_Session_State.focus_state;
                     time_left_in_millis = work_length;
+                    starting_time = work_length;
                     break;
                 case focus_state:
                     current_state = number_of_sessions_left == 0 ? Timer_Session_State.long_break_state : Timer_Session_State.break_state;
                     time_left_in_millis = number_of_sessions_left == 0 ? long_break_length : break_length;
+                    starting_time = number_of_sessions_left == 0 ? long_break_length : break_length;
                     break;
                 case break_state:
                     current_state = Timer_Session_State.focus_state;
                     number_of_sessions_left--;
                     time_left_in_millis = work_length;
+                    starting_time = work_length;
                     break;
                 case long_break_state:
                     current_state = Timer_Session_State.idle_state;
@@ -261,6 +293,8 @@ public class Timer_Screen extends Fragment {
                 default:
                     Database.showPopup(getActivity(), "Error: Next State is Undefined");
             }
+
+
         }
         startTimer();
     }

@@ -23,7 +23,6 @@ import matthew.won.utoronto.prod.Datatypes.Task;
 
 /*TO DO:
  * Media Player
- * Try to get setting values to be constantly displayed on the settings page
  * Look at brain focus settings layout
  * another bug: save changes button crashes when there is no input
  */

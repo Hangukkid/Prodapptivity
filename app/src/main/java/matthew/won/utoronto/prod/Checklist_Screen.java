@@ -25,13 +25,6 @@ import matthew.won.utoronto.prod.Datatypes.Task;
 
 import static android.app.Activity.RESULT_OK;
 
-//Website to create the list:
-//https://guides.codepath.com/android/Basic-Todo-App-Tutorial
-
-/*
-TODO: find out how to add items onto a listView without having to create an array everytime the activity starts
- */
-
 public class Checklist_Screen extends Fragment {
 
     /**********************************VARIABLES*************************************************/
@@ -41,7 +34,6 @@ public class Checklist_Screen extends Fragment {
     private ArrayList<Task> checklist;
     private Checklist_Adapter task_adapter;
     private ListView checklist_view;
-//    private EditText new_task_text;
     private Button add_task_btn;
     private Spinner subject_pick_spinner;
     private String default_all_subjects = "All Subjects";
@@ -74,7 +66,6 @@ public class Checklist_Screen extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.checklist_screen, container, false);
         checklist_view = (ListView) view.findViewById(R.id.checklist_view);
-//        new_task_text = (EditText) view.findViewById(R.id.new_task_text);
         subject_pick_spinner = (Spinner) view.findViewById(R.id.subject_pick_spinner);
 
 
@@ -101,12 +92,6 @@ public class Checklist_Screen extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-//        toolbar = (Toolbar) view.findViewById(R.id.my_toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        android.support.v7.app.ActionBar actionbar = getSupportActionBar();
-//        actionbar.setDisplayHomeAsUpEnabled(true);
-//        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         add_task_btn = (Button) view.findViewById(R.id.add_task_btn);
         addTaskOnClick();
 
