@@ -30,13 +30,8 @@ import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Task;
 
 /*
-   *
+Set up animation so that the button appears and disappears through fading when list swipes up and down respectively
  */
-
-/*
-Add in adapter to the list_view
- */
-
 
 public class Calendar_Screen extends Fragment {
 
@@ -134,7 +129,7 @@ public class Calendar_Screen extends Fragment {
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        max_height = top_view_group.getHeight();
+                        max_height = top_view_group.getHeight() - height_offset;
                     }
                 });
 

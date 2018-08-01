@@ -19,9 +19,9 @@
         android:id="@+id/timer_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/progress_bar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="209dp"
+        android:layout_marginTop="75dp"
         android:text="00:00"
         android:textColor="@android:color/black"
         android:textSize="40sp" />
@@ -33,7 +33,9 @@
         android:layout_below="@+id/progress_bar"
         android:layout_marginEnd="-10dp"
         android:layout_toStartOf="@+id/timer_value"
-        android:text="Start" />
+        android:text="Start"
+        android:layout_marginRight="-10dp"
+        android:layout_toLeftOf="@+id/timer_value" />
 
     <Button
         android:id="@+id/reset_btn"
@@ -44,7 +46,9 @@
         android:layout_toEndOf="@+id/timer_value"
         android:text="Reset"
         android:visibility="visible"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:layout_marginLeft="-13dp"
+        android:layout_toRightOf="@+id/timer_value" />
 
     <Button
         android:id="@+id/settings_btn"
@@ -52,7 +56,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:text="Settings" />
+        android:text="Settings"
+        android:layout_alignParentRight="true" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -61,7 +66,7 @@
         android:layout_height="200dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="134dp"
+        android:layout_marginTop="70dp"
         android:progress="100"
         android:progressDrawable="@drawable/circle" />
 

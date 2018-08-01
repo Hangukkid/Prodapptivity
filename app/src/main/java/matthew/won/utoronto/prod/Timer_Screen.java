@@ -106,7 +106,7 @@ public class Timer_Screen extends Fragment {
         progress_bar = (ProgressBar) view.findViewById(R.id.progress_bar);
         start_pause_btn = (Button) view.findViewById(R.id.start_pause_btn);
         reset_btn = (Button) view.findViewById(R.id.reset_btn);
-        settings_btn = (Button) view.findViewById(R.id.settings_btn);
+//        settings_btn = (Button) view.findViewById(R.id.settings_btn);
 
         //Clicking the button will start the timer
         //If start is pressed, the button will change to "Pause"
@@ -130,13 +130,13 @@ public class Timer_Screen extends Fragment {
             }
         });
 
-        settings_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent settings = new Intent(getActivity(), Settings.class);
-                startActivity(settings);
-            }
-        });
+//        settings_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent settings = new Intent(getActivity(), Settings.class);
+//                startActivity(settings);
+//            }
+//        });
         updateTimerValue();
         updateCountDownText();
     }
@@ -233,7 +233,7 @@ public class Timer_Screen extends Fragment {
             work_length = current_config.focus_time * 60 * 1000;
             break_length = current_config.break_time * 60 * 1000;
             long_break_length = current_config.long_break_time * 60 * 1000;
-            number_of_sessions_left = current_config.number_of_sessoions;
+            number_of_sessions_left = current_config.number_of_sessions;
             time_left_in_millis = work_length;
         }
     }

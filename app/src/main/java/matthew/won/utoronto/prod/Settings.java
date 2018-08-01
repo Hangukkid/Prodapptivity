@@ -39,11 +39,17 @@ public class Settings extends AppCompatActivity {
         database = Database.getDatabase();
 
         SeekCurrent();
-        UpdateData ();
+        UpdateData();
+
+        worklength.setText(worklength.getText().toString());
+
+
     }
 
 
     public void UpdateData () {
+
+
         pomodoro_save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +57,7 @@ public class Settings extends AppCompatActivity {
                 pd.focus_time = Integer.parseInt(worklength.getText().toString());
                 pd.break_time = Integer.parseInt(breaklength.getText().toString());
                 pd.long_break_time = Integer.parseInt(longbreaklength.getText().toString());
-                pd.number_of_sessoions = Integer.parseInt(numofsessions.getText().toString());
+                pd.number_of_sessions = Integer.parseInt(numofsessions.getText().toString());
 
                 boolean isUpdate = database.updateData(pd, Database.getPomodoroSQL().TABLE_NAME);
                 if (isUpdate) {
@@ -65,24 +71,27 @@ public class Settings extends AppCompatActivity {
     }
 
     public void SeekCurrent () {
-        pomodoro_data_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
                 ArrayList<Pomodoro_Data> res = database.loadDatabase(Database.getPomodoroSQL());
                 if (res.size() == 0) {
                     Database.showMessage(Settings.this, "Error", "Nothing found");
                     return;
                 }
-                StringBuffer buffer = new StringBuffer();
+//                StringBuffer buffer = new StringBuffer();
                 for (Pomodoro_Data t : res) {
-                    buffer.append("Work Session Length : " + Integer.toString(t.focus_time) + "\n");
-                    buffer.append("Break Session Length : " + Integer.toString(t.break_time) + "\n");
-                    buffer.append("Long Break Session Length : " + Integer.toString(t.long_break_time) + "\n");
-                    buffer.append("Number of Sessions : " + Integer.toString(t.number_of_sessoions) + "\n\n");
+//                    buffer.append("Work Session Length : " + Integer.toString(t.focus_time) + "\n");
+//                    buffer.append("Break Session Length : " + Integer.toString(t.break_time) + "\n");
+//                    buffer.append("Long Break Session Length : " + Integer.toString(t.long_break_time) + "\n");
+//                    buffer.append("Number of Sessions : " + Integer.toString(t.number_of_sessions) + "\n\n");
+
+                    worklength.setText(Integer.toString(t.focus_time));
+                    breaklength.setText(Integer.toString(t.break_time));
+                    longbreaklength.setText(Integer.toString(t.long_break_time));
+                    numofsessions.setText(Integer.toString(t.number_of_sessions));
+
                 }
-                Database.showMessage(Settings.this,"Data", buffer.toString());
-            }
-        });
+//                Database.showMessage(Settings.this,"Data", buffer.toString());
+
     }
 
 }

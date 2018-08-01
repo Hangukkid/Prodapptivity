@@ -23,11 +23,9 @@ import matthew.won.utoronto.prod.Datatypes.Task;
 
 /*TO DO:
  * Media Player
- * Move timer inside countdown circle
- * See if I can edit the timer settings labels (and figure out what does what)
- * Do something about the subject button in calendar
- * Look into how toolbar works
- * Make checkist item more aesthetic (do research online)
+ * Try to get setting values to be constantly displayed on the settings page
+ * Look at brain focus settings layout
+ * another bug: save changes button crashes when there is no input
  */
 
 public class View_Pager_Screen extends AppCompatActivity {

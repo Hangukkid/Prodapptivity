@@ -10,17 +10,29 @@
     <CalendarView
         android:id="@+id/calendar_view"
         android:layout_width="fill_parent"
-        android:layout_height="323dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/my_toolbar" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/my_toolbar"
+        android:layout_alignParentLeft="true"
+        android:elevation="2dp"/>
+
+    <Button
+        android:id="@+id/subject_make_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/calendar_view"
+        android:text="Subject"
+        android:layout_marginRight="33dp"
+        android:layout_alignParentRight="true"
+        android:elevation="1dp"/>
 
     <LinearLayout
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="125dp"
         android:layout_alignParentBottom="true"
         android:background="@color/gray"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:elevation="3dp">
 
         <View
             android:layout_width="match_parent"
@@ -36,66 +48,6 @@
             android:visibility="visible" />
     </LinearLayout>
 
-    <!--<ListView-->
-        <!--android:id="@+id/checklist_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/colorAccent">-->
 
-    <!--</ListView>-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/task_name"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_below="@+id/calendar_view"-->
-        <!--android:layout_marginStart="14dp"-->
-        <!--android:text="Name of task"-->
-        <!--android:textSize="20sp" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/subject"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignBottom="@+id/task_name"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_marginEnd="43dp"-->
-        <!--android:text="ECE216: " />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/type"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignBottom="@+id/task_name"-->
-        <!--android:layout_marginStart="-43dp"-->
-        <!--android:layout_toEndOf="@+id/subject"-->
-        <!--android:text="LEC" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/description"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignStart="@+id/task_name"-->
-        <!--android:layout_below="@+id/task_name"-->
-        <!--android:text="Due at like this time" />-->
-
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_marginBottom="57dp"-->
-        <!--android:text="Will need a listview here later in the future..." />-->
-    <!---->
-
-    <Button
-        android:id="@+id/subject_make_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="64dp"
-        android:text="Subject" />
 
 </RelativeLayout>

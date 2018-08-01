@@ -12,20 +12,20 @@ public class Pomodoro_Data implements Stringable<Pomodoro_Data> {
     public int focus_time;
     public int break_time;
     public int long_break_time;
-    public int number_of_sessoions;
+    public int number_of_sessions;
 
     public Pomodoro_Data (int f, int b, int l, int n) {
         focus_time = f;
         break_time = b;
         long_break_time = l;
-        number_of_sessoions = n;
+        number_of_sessions = n;
     }
 
     public Pomodoro_Data (String f, String b, String l, String n) {
         focus_time = Integer.parseInt(f);
         break_time = Integer.parseInt(b);
         long_break_time = Integer.parseInt(l);
-        number_of_sessoions = Integer.parseInt(n);
+        number_of_sessions = Integer.parseInt(n);
     }
 
     public Pomodoro_Data () {
@@ -38,7 +38,7 @@ public class Pomodoro_Data implements Stringable<Pomodoro_Data> {
         data.add(Integer.toString(focus_time));
         data.add(Integer.toString(break_time));
         data.add(Integer.toString(long_break_time));
-        data.add(Integer.toString(number_of_sessoions));
+        data.add(Integer.toString(number_of_sessions));
         return data;
     }
 
@@ -47,7 +47,7 @@ public class Pomodoro_Data implements Stringable<Pomodoro_Data> {
         this.focus_time = Integer.parseInt(data.get(1));
         this.break_time = Integer.parseInt(data.get(2));
         this.long_break_time = Integer.parseInt(data.get(3));
-        this.number_of_sessoions = Integer.parseInt(data.get(4));
+        this.number_of_sessions = Integer.parseInt(data.get(4));
     }
 
     public Pomodoro_Data newInstance() {
