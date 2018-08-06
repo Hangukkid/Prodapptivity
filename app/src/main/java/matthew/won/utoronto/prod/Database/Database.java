@@ -72,6 +72,12 @@ public final class Database {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
+    public static String getToday () {
+        Calendar c = Calendar.getInstance();
+        Date date = new Date(c.getTimeInMillis());
+        return date.toString();
+    }
+
     public static String dateTimeFormat (int year, int month, int day) {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, year);

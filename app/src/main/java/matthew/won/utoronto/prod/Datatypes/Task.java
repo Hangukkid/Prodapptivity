@@ -14,16 +14,18 @@ public class Task implements Stringable<Task> {
     private String start_date;
     private String deadline;
     private String subject_id;
+    private String priority;
 
     public Task(){
 
     }
 
-    public Task (String task_name, String description, String start_date, String deadline, String subject_id){
+    public Task (String task_name, String description, String start_date, String deadline, String priority, String subject_id){
         this.task_name = task_name;
         this.description = description;
         this.start_date = start_date;
         this.deadline = deadline;
+        this.priority = priority;
         this.subject_id = subject_id;
     }
     public String getID() {
@@ -36,7 +38,7 @@ public class Task implements Stringable<Task> {
     public String getTask_name() {
         return task_name;
     }
-    public void setTask_name(String task_name) { this.task_name = task_name; }
+    public void setTaskName(String task_name) { this.task_name = task_name; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
@@ -47,12 +49,16 @@ public class Task implements Stringable<Task> {
     public String getSubjectID() { return subject_id; }
     public void setSubjectID(String subject_id) { this.subject_id = subject_id; }
 
+    public String getPriority() { return priority; }
+    public void setPriority(String priority) { this.priority = priority; }
+
     public ArrayList<String> stringify() {
         ArrayList<String> stringified_task = new ArrayList<String>();
         stringified_task.add(id);
         stringified_task.add(task_name);
         stringified_task.add(description);
         stringified_task.add(deadline);
+        stringified_task.add(priority);
         stringified_task.add(subject_id);
         return stringified_task;
     }
@@ -61,14 +67,15 @@ public class Task implements Stringable<Task> {
         this.task_name = data.get(1);
         this.description = data.get(2);
         this.deadline = data.get(3);
-        this.subject_id = data.get(4);
+        this.priority = data.get(4);
+        this.subject_id = data.get(5);
     }
     public Task newInstance() {
         return new Task();
     }
 
     public String getDatabaseForum() {
-        return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE INTEGER, SUBJECT_ID INTEGER NOT NULL, FOREIGN KEY (SUBJECT_ID) REFERENCES subjects(ID) ON DELETE CASCADE";
+        return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE INTEGER, PRIORITY INTEGER, SUBJECT_ID INTEGER NOT NULL, FOREIGN KEY (SUBJECT_ID) REFERENCES subjects(ID) ON DELETE CASCADE";
     }
 
     public static void createTable (String table_name) {

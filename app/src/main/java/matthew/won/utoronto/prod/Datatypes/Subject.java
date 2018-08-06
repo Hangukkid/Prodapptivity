@@ -10,21 +10,21 @@ import matthew.won.utoronto.prod.Database.Stringable;
 public class Subject implements Stringable<Subject> {
     private String id;
     private String subject_name;
-    private String importance;
+    private String priority;
     private String colour;
-    private ArrayList<Integer> related_tasks;
-//    private String start_time;
-//    private String end_time;
+//    private ArrayList<Integer> related_tasks;
+    private String start_time;
+    private String end_time;
 
     public Subject() {
 
     }
 
-    public Subject (String subject_name, String importance, String colour) {
+    public Subject (String subject_name, String priority, String colour) {
         this.id = null;
         this.subject_name = subject_name;
-        this.related_tasks = new ArrayList<Integer>();
-        this.importance = importance;
+//        this.related_tasks = new ArrayList<Integer>();
+        this.priority = priority;
         this.colour = colour;
     }
 
@@ -36,9 +36,9 @@ public class Subject implements Stringable<Subject> {
 
     public void setSubjectName(String subject_name) { this.subject_name = subject_name; }
 
-    public String getImportance() { return importance; }
+    public String getPriority() { return priority; }
 
-    public void setImportance(String importance) { this.importance = importance; }
+    public void setPriority(String priority) { this.priority = priority; }
 
     public String getColour() { return colour; }
 
@@ -50,14 +50,14 @@ public class Subject implements Stringable<Subject> {
         ArrayList<String> stringified_task = new ArrayList<String>();
         stringified_task.add(id);
         stringified_task.add(subject_name);
-        stringified_task.add(importance);
+        stringified_task.add(priority);
         stringified_task.add(colour);
         return stringified_task;
     }
     public void unstringify(ArrayList<String> data) {
         this.id = data.get(0);
         this.subject_name = data.get(1);
-        this.importance = data.get(2);
+        this.priority = data.get(2);
         this.colour = data.get(3);
     }
     public Subject newInstance() {
@@ -65,7 +65,7 @@ public class Subject implements Stringable<Subject> {
     }
 
     public String getDatabaseForum() {
-        return "SUBJECT_NAME TEXT, IMPORTANCE REAL, COLOUR TEXT";
+        return "SUBJECT_NAME TEXT, PRIORITY INTEGER, COLOUR TEXT";
     }
 
     public static void createTable (String table_name) {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
     Button task_add_btn;
     ImageButton task_select_start_day;
     ImageButton task_select_end_day;
+    SeekBar task_priority;
     String chosen_date_picker = "task_select_end_day";
 
     Spinner subject_pick_spinner;
@@ -41,6 +43,7 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
     SQL_Helper database;
     Datatype_SQL<Subject> subject_sql;
     Datatype_SQL<Task> task_sql;
+    String priority = "1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,9 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
         task_add_btn = (Button) findViewById(R.id.task_add_btn);
         task_select_start_day = (ImageButton) findViewById(R.id.task_select_start_day);
         task_select_end_day = (ImageButton) findViewById(R.id.task_select_end_day);
+        task_priority = (SeekBar) findViewById(R.id.task_priority);
+        task_start_date.setHint("");
+        task_end_date.setHint("");
 
         database = Database.getDatabase();
         subject_sql = Database.getSubjectSQL();
@@ -68,6 +74,7 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
 
         addTask();
         makeDatePickerButtons();
+        seekBarHandler();
     }
 
     @Override
@@ -103,15 +110,29 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
                 String task_description = task_description_txt.getText().toString();
                 String task_start = task_start_date.getHint().toString();
                 String task_end= task_end_date.getHint().toString();
-                Task new_task = new Task(task_name, task_description, task_start, task_end, subject_id);
-                database.insertData(new_task, task_sql.TABLE_NAME);
 
-                Database.showPopup(Create_Task.this, task_end);
+                if (subject_id.isEmpty()) {
+                    Database.showPopup(Create_Task.this, "Which subject does it pertain to?");
+                } else if (task_name.isEmpty()) {
+                    Database.showPopup(Create_Task.this, "Give this task a name.");
+                } else if (task_end.isEmpty()) {
+                    Database.showPopup(Create_Task.this, "This task needs a due date!");
+                } else {
+                    if (task_start.isEmpty()) {
+                        task_start = Database.getToday();
+                    } if (task_description.isEmpty()) {
+                        task_description = "No description has been given.";
+                    } 
+                    Task new_task = new Task(task_name, task_description, task_start, task_end, priority, subject_id);
+                    database.insertData(new_task, task_sql.TABLE_NAME);
 
-                Intent intent = new Intent();
-                intent.putExtra("subject_id", subject_id);
-                setResult(RESULT_OK, intent);
-                finish();
+                    Database.showPopup(Create_Task.this, task_end);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("subject_id", subject_id);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         });
     }
@@ -133,6 +154,19 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getSupportFragmentManager(), "end date picker");
             }
+        });
+    }
+    private void seekBarHandler () {
+        task_priority.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                priority = ((Integer)(progress + 1)).toString();
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
 }
