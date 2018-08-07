@@ -42,13 +42,12 @@
             android:textSize="20dp"
             android:visibility="invisible" />
 
-        <Button
+        <ImageButton
             android:id="@+id/add_task_btn"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="right"
-            android:onClick="addTaskOnClick"
-            android:text="Add task" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@android:drawable/ic_input_add" />
 
     </LinearLayout>
 

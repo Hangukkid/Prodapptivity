@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -34,7 +34,7 @@ public class Checklist_Screen extends Fragment {
     private ArrayList<Task> checklist;
     private Checklist_Adapter task_adapter;
     private ListView checklist_view;
-    private Button add_task_btn;
+    private ImageButton add_task_btn;
     private Spinner subject_pick_spinner;
     private String default_all_subjects = "All Subjects";
 
@@ -92,7 +92,7 @@ public class Checklist_Screen extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        add_task_btn = (Button) view.findViewById(R.id.add_task_btn);
+        add_task_btn = (ImageButton) view.findViewById(R.id.add_task_btn);
         addTaskOnClick();
 
     }
@@ -110,16 +110,6 @@ public class Checklist_Screen extends Fragment {
         add_task_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String new_task_string = new_task_text.getText().toString();
-//                if (new_task_string != "" && !new_task_string.isEmpty()) {
-//                    Task new_task = new Task(new_task_string, "for idiots", "now", "subject");
-//                    work_database.insertData(new_task, checklist_sql.TABLE_NAME);
-//                    new_task_text.setText("");
-//
-//                    new_task = work_database.getMostRecent(checklist_sql);
-//                    // add task to list
-//                    task_adapter.add(new_task);
-//                }
                 Intent create_task = new Intent(getActivity(), Create_Task.class);
                 startActivityForResult(create_task, 0);
             }
@@ -130,31 +120,59 @@ public class Checklist_Screen extends Fragment {
     {
         super.onActivityResult(requestCode, resultCode, data);
         // check if the request code is same as what is passed  here it is 2
-        switch (requestCode) {
-            case 0:
-                Subject subject = ((Subject) subject_pick_spinner.getSelectedItem());
-                if (resultCode == RESULT_OK) {
+        Subject subject = ((Subject) subject_pick_spinner.getSelectedItem());
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 0:
                     boolean put_in_adapter = data.getStringExtra("subject_id").equals(subject.getID()) ||
-                                                subject.getSubjectName().equals(default_all_subjects);
+                            subject.getSubjectName().equals(default_all_subjects);
                     if (put_in_adapter) {
                         Task new_task = work_database.getMostRecent(checklist_sql);
                         checklist.add(new_task);
                         updateAdapter();
                     }
-                }
-                break;
-            default:
-                break;
+                    break;
+                case 1:
+                    String task_id = data.getStringExtra("task_id");
+                    checklist_sql.filterby(task_id, 0);
+                    Task updated_task = work_database.filterContent(checklist_sql).get(0);
+                    boolean update_in_adapter = updated_task.getSubjectID().equals(subject.getID()) ||
+                            subject.getSubjectName().equals(default_all_subjects);
+
+                    for (int i = 0; i < checklist.size(); i++) {
+                        if (checklist.get(i).getID().equals(task_id)) {
+                            if (update_in_adapter)
+                                checklist.set(i, updated_task);
+                            else
+                                checklist.remove(i);
+                        }
+                    }
+
+                    updateAdapter();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
+    /*
+        Basically I'm trying to show the updated task when I finally update the the task in the checklistview
+    */
+
     // Attaches a long click listener to the listview
     private void setupListViewListener() {
-        checklist_view.setOnItemLongClickListener(
-            new AdapterView.OnItemLongClickListener() {
+        checklist_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent update_task = new Intent(getActivity(), Create_Task.class);
+                update_task.putExtra("task_id", checklist.get(position).getID());
+                startActivityForResult(update_task, 1);
+            }
+        });
+        checklist_view.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
-                public boolean onItemLongClick(AdapterView<?> adapter,
-                                            View item, int pos, long id) {
+                public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
                     Task task_to_delete = checklist.get(pos);
                     //task_db_helper.deleteTask(task_to_delete);
                     work_database.deleteData(task_to_delete.getID(), checklist_sql.TABLE_NAME);
@@ -189,7 +207,7 @@ public class Checklist_Screen extends Fragment {
                 if (subject.getSubjectName().equals(default_all_subjects)) {
                     checklist = work_database.loadDatabase(checklist_sql);
                 } else {
-                    checklist_sql.filterby(subject.getID(), 4);
+                    checklist_sql.filterby(subject.getID(), 6);
                     checklist = work_database.filterContent(checklist_sql);
                 }
                 updateAdapter ();

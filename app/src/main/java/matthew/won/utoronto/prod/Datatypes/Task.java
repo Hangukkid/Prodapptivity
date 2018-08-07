@@ -35,13 +35,16 @@ public class Task implements Stringable<Task> {
         this.id = id;
     }
 
-    public String getTask_name() {
+    public String getTaskName() {
         return task_name;
     }
     public void setTaskName(String task_name) { this.task_name = task_name; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getStartDate() { return start_date; }
+    public void setStartDate(String start_date) { this.start_date = start_date; }
 
     public String getDeadline() { return deadline; }
     public void setDeadline(String deadline) { this.deadline = deadline; }
@@ -57,6 +60,7 @@ public class Task implements Stringable<Task> {
         stringified_task.add(id);
         stringified_task.add(task_name);
         stringified_task.add(description);
+        stringified_task.add(start_date);
         stringified_task.add(deadline);
         stringified_task.add(priority);
         stringified_task.add(subject_id);
@@ -66,16 +70,17 @@ public class Task implements Stringable<Task> {
         this.id = data.get(0);
         this.task_name = data.get(1);
         this.description = data.get(2);
-        this.deadline = data.get(3);
-        this.priority = data.get(4);
-        this.subject_id = data.get(5);
+        this.start_date = data.get(3);
+        this.deadline = data.get(4);
+        this.priority = data.get(5);
+        this.subject_id = data.get(6);
     }
     public Task newInstance() {
         return new Task();
     }
 
     public String getDatabaseForum() {
-        return "TASK_NAME TEXT, DESCRIPTION TEXT, DEADLINE INTEGER, PRIORITY INTEGER, SUBJECT_ID INTEGER NOT NULL, FOREIGN KEY (SUBJECT_ID) REFERENCES subjects(ID) ON DELETE CASCADE";
+        return "TASK_NAME TEXT, DESCRIPTION TEXT, START_DATE INTEGER, DEADLINE INTEGER, PRIORITY INTEGER, SUBJECT_ID INTEGER NOT NULL, FOREIGN KEY (SUBJECT_ID) REFERENCES subjects(ID) ON DELETE CASCADE";
     }
 
     public static void createTable (String table_name) {

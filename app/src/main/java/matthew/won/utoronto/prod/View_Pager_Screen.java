@@ -106,6 +106,8 @@ public class View_Pager_Screen extends AppCompatActivity {
     }
 
     private void setupCreateDatabase(String database_name) {
+        boolean debug = true;
+
         SQL_Helper database = new SQL_Helper(database_name, this);
         Database.setDatabase(database);
 
@@ -123,12 +125,19 @@ public class View_Pager_Screen extends AppCompatActivity {
             Pomodoro_Data initial = new Pomodoro_Data(25, 5, 15, 4);
             database.insertData(initial, pomodoro_table_name);
         }
-        Subject test_1 = new Subject("ECE212", "5", "Black");
-        Subject test_2 = new Subject("ECE244", "6", "Red");
-        Subject test_3 = new Subject("ECE297", "8", "Green");
 
-        database.insertData(test_1, subject_table_name);
-        database.insertData(test_2, subject_table_name);
-        database.insertData(test_3, subject_table_name);
+        if (debug) {
+            Subject test_1 = new Subject("ECE212", "1", "Black");
+            Subject test_2 = new Subject("ECE244", "2", "Red");
+            Subject test_3 = new Subject("ECE297", "3", "Green");
+
+            Task test_a = new Task("Workshop", "blah", "2018-08-22", "2018-08-25", "2", "1");
+
+            database.insertData(test_1, subject_table_name);
+            database.insertData(test_2, subject_table_name);
+            database.insertData(test_3, subject_table_name);
+
+            database.insertData(test_a, task_table_name);
+        }
     }
 }

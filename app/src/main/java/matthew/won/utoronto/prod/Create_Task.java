@@ -30,6 +30,7 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
     TextView task_start_date;
     TextView task_end_date;
     Button task_add_btn;
+    Button task_update_btn;
     ImageButton task_select_start_day;
     ImageButton task_select_end_day;
     SeekBar task_priority;
@@ -44,6 +45,7 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
     Datatype_SQL<Subject> subject_sql;
     Datatype_SQL<Task> task_sql;
     String priority = "1";
+    String task_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,8 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
         task_start_date = (TextView)findViewById(R.id.task_start_date);
         task_end_date= (TextView)findViewById(R.id.task_end_date);
         task_add_btn = (Button) findViewById(R.id.task_add_btn);
+        task_update_btn = (Button) findViewById(R.id.task_update_btn);
+
         task_select_start_day = (ImageButton) findViewById(R.id.task_select_start_day);
         task_select_end_day = (ImageButton) findViewById(R.id.task_select_end_day);
         task_priority = (SeekBar) findViewById(R.id.task_priority);
@@ -73,6 +77,7 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
         subject_pick_spinner.setAdapter(subject_adapter);
 
         addTask();
+        updateTask();
         makeDatePickerButtons();
         seekBarHandler();
     }
@@ -84,6 +89,26 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
         String today = Database.dateTimeFormat(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         task_start_date.setText(Database.prettyDateTimeFormat(today));
         task_start_date.setHint(today);
+
+        Bundle i = this.getIntent().getExtras();
+        if (i != null) {
+            String id_of_task = i.getString("task_id");
+            if (id_of_task != null && !id_of_task.isEmpty()) {
+                task_add_btn.setVisibility(View.GONE);
+                task_update_btn.setVisibility(View.VISIBLE);
+                task_sql.filterby(id_of_task, 0);
+                Task to_update = database.filterContent(task_sql).get(0);
+                task_name_txt.setText(to_update.getTaskName());
+                task_description_txt.setText(to_update.getDescription());
+                task_start_date.setText(Database.prettyDateTimeFormat(to_update.getStartDate()));
+                task_start_date.setHint(to_update.getStartDate());
+                task_end_date.setText(Database.prettyDateTimeFormat(to_update.getDeadline()));
+                task_end_date.setHint(to_update.getDeadline());
+                task_priority.setProgress(Integer.parseInt(to_update.getPriority()));
+                subject_pick_spinner.setSelection(Integer.parseInt(to_update.getSubjectID()) - 1);
+                task_id = id_of_task;
+            }
+        }
     }
 
     @Override
@@ -98,6 +123,44 @@ public class Create_Task extends AppCompatActivity implements DatePickerDialog.O
             task_end_date.setHint(dateString);
             task_end_date.setText(prettyDateString);
         }
+    }
+
+    private void updateTask () {
+        task_update_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Subject item = (Subject) subject_pick_spinner.getSelectedItem();
+                String subject_id = item.getID();
+                String task_name = task_name_txt.getText().toString();
+                String task_description = task_description_txt.getText().toString();
+                String task_start = task_start_date.getHint().toString();
+                String task_end= task_end_date.getHint().toString();
+
+                if (subject_id.isEmpty()) {
+                    Database.showPopup(Create_Task.this, "Which subject does it pertain to?");
+                } else if (task_name.isEmpty()) {
+                    Database.showPopup(Create_Task.this, "Give this task a name.");
+                } else if (task_end.isEmpty()) {
+                    Database.showPopup(Create_Task.this, "This task needs a due date!");
+                } else {
+                    if (task_start.isEmpty()) {
+                        task_start = Database.getToday();
+                    } if (task_description.isEmpty()) {
+                        task_description = "No description has been given.";
+                    }
+                    Task new_task = new Task(task_name, task_description, task_start, task_end, priority, subject_id);
+                    new_task.setID(task_id);
+                    database.updateData(new_task, task_sql.TABLE_NAME);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("task_id", task_id);
+                    setResult(RESULT_OK, intent);
+                    task_add_btn.setVisibility(View.VISIBLE);
+                    task_update_btn.setVisibility(View.GONE);
+                    finish();
+                }
+            }
+        });
     }
 
     private void addTask () {

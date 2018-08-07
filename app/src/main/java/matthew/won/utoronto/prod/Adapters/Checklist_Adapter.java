@@ -38,7 +38,7 @@ public class Checklist_Adapter extends ArrayAdapter<Task> {
         ImageView task_subject_colour = (ImageView) convertView.findViewById(R.id.task_subject_colour);
 
 
-        task_name_text.setText(task.getTask_name());
+        task_name_text.setText(task.getTaskName());
         task_description_text.setText(task.getDescription());
         due_date.setText(Database.prettyDateTimeFormat(task.getDeadline()));
 
