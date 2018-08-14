@@ -12,6 +12,9 @@ import matthew.won.utoronto.prod.Database.Database;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
 
+/*
+Changed button saved settings so that the current settings are always displayed
+ */
 
 
 public class Settings extends AppCompatActivity {

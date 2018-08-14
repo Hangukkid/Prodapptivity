@@ -34,11 +34,12 @@ import matthew.won.utoronto.prod.Datatypes.Timer_Session_State;
 To make the new saved settings take effect, you have to press "Reset" first
 The first time you make changes to the settings, you have to press "start" and then "reset"
 there is a bug when you try to set the initial start time to 0
-progress bar does not countdown
 consider the problem when the user switches screens, and the system handles that by restarting the activity (need to confirm)
    so having a media player run in the background might do the trick. see "Using media player in a service"
 
-When running pausing the timer (for testing purposes) the media player would have loaded and ready to play, but the code exits the pause code too fast for it to play anything
+There is another bug where after you finish your work length and the pop up asks you if you want to continue to break length, when you press the start button twice, it switches back to work length?
+
+Ask to remove toast because it prevents the media player from playing when timer stops
  */
 
 public class Timer_Screen extends Fragment {
@@ -91,6 +92,7 @@ public class Timer_Screen extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.timer_screen, container, false);
 
+
         // Notification manager
         mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -101,7 +103,11 @@ public class Timer_Screen extends Fragment {
 
         wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
+        media_player = null;
+
+        //Initializing start time for countdown
         starting_time = 1;
+
 
         return view;
     }
@@ -111,6 +117,7 @@ public class Timer_Screen extends Fragment {
         //Initializing views
         timer_value = (TextView) view.findViewById(R.id.timer_value);
 
+        //Progress bar was decreasing in the wrong direction. Flipped the image
         progress_bar = (ProgressBar) view.findViewById(R.id.progress_bar);
         progress_bar.setScaleX(-1);
         progress_bar.setScaleY(1);
@@ -119,8 +126,7 @@ public class Timer_Screen extends Fragment {
         start_pause_btn = (Button) view.findViewById(R.id.start_pause_btn);
         reset_btn = (Button) view.findViewById(R.id.reset_btn);
 
-//        media_player = MediaPlayer.create(getActivity(), R.raw.alarm);
-//        media_player.start();
+
 
         //Clicking the button will start the timer
         //If start is pressed, the button will change to "Pause"
@@ -146,6 +152,8 @@ public class Timer_Screen extends Fragment {
 
         updateTimerValue();
         updateCountDownText();
+
+
     }
 
     /************************HELPER FUNCTIONS*********************************************************/
@@ -157,6 +165,7 @@ public class Timer_Screen extends Fragment {
             @Override
             public void onTick(long millisUntilFinished) {
 
+
                 //If we cancel the timer and make a new one, the timer will resume from before
                 time_left_in_millis = millisUntilFinished;
                 updateCountDownText();
@@ -164,18 +173,29 @@ public class Timer_Screen extends Fragment {
 
             @Override
             public void onFinish() {
-//                if (media_player == null) {
-//                    media_player = MediaPlayer.create(getActivity(), R.raw.alarm);
-//                    media_player.start();
-//                }
+
+                if (media_player == null) {
+                    media_player = MediaPlayer.create(getActivity(), R.raw.see_you_again);
+                    media_player.start();
+                }
+
+
                 AlertDialog dialog = createDialog().create();
                 dialog.show();
+
+
             }
         }.start();
 
         is_timer_running = true;
         start_pause_btn.setText("Pause");
 
+
+//        if (media_player != null) {
+//            media_player.stop();
+//            media_player.release();
+//            media_player = null;
+//        }
 
         // turn off
         wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -189,13 +209,19 @@ public class Timer_Screen extends Fragment {
         count_down_timer.cancel();
         is_timer_running = false;
         start_pause_btn.setText("Start");
-//        MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.alarm);
-//        mediaPlayer.start();
+
+
     }
 
     private void resetTimer() {
         if (count_down_timer != null) {
             count_down_timer.cancel();
+
+//            if (media_player != null) {
+//                media_player.stop();
+//                media_player.release();
+//                media_player = null;
+//            }
 
             is_timer_running = false;
 
@@ -206,10 +232,6 @@ public class Timer_Screen extends Fragment {
             current_state = Timer_Session_State.idle_state;
 //        reset_btn.setVisibility(View.INVISIBLE);
 
-//            if (media_player != null) {
-//                media_player.release();
-//                media_player = null;
-//            }
 
             //turn on
             wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -228,17 +250,9 @@ public class Timer_Screen extends Fragment {
 
         timer_value.setText(time_left_formatted);
 
-        //Need access to the starting time
-
-
 
         double percentage = ((double)time_left_in_millis/(double)starting_time)*100;
         int progress = (int) percentage;
-
-//        Log.d("timer", "Current time left is: " + time_left_in_millis);
-//        Log.d("timer", "Start time left is: " + starting_time);
-//        Log.d("timer", "Percentage is: " + percentage);
-//        Log.d("timer", "Progress is: " + progress);
 
         progress_bar.setProgress(progress);
 
@@ -255,14 +269,14 @@ public class Timer_Screen extends Fragment {
         else {
             //Toast.makeText(this, "Made Changes", Toast.LENGTH_LONG).show();
             // test values so that we don't wait for 1293428947 years
-//            work_length = 1 * 6 * 1000;
-//            break_length = 2 * 6 * 1000;
-//            long_break_length = 3 * 6 * 1000;
-//            number_of_sessions_left = 3;
-            work_length = current_config.focus_time * 60 * 1000;
-            break_length = current_config.break_time * 60 * 1000;
-            long_break_length = current_config.long_break_time * 60 * 1000;
-            number_of_sessions_left = current_config.number_of_sessions;
+            work_length = 1 * 2 * 1000;
+            break_length = 2 * 6 * 1000;
+            long_break_length = 3 * 6 * 1000;
+            number_of_sessions_left = 3;
+//            work_length = current_config.focus_time * 60 * 1000;
+//            break_length = current_config.break_time * 60 * 1000;
+//            long_break_length = current_config.long_break_time * 60 * 1000;
+//            number_of_sessions_left = current_config.number_of_sessions;
             time_left_in_millis = work_length;
         }
     }
@@ -273,18 +287,15 @@ public class Timer_Screen extends Fragment {
                 case idle_state:
                     current_state = Timer_Session_State.focus_state;
                     time_left_in_millis = work_length;
-                    starting_time = work_length;
                     break;
                 case focus_state:
                     current_state = number_of_sessions_left == 0 ? Timer_Session_State.long_break_state : Timer_Session_State.break_state;
                     time_left_in_millis = number_of_sessions_left == 0 ? long_break_length : break_length;
-                    starting_time = number_of_sessions_left == 0 ? long_break_length : break_length;
                     break;
                 case break_state:
                     current_state = Timer_Session_State.focus_state;
                     number_of_sessions_left--;
                     time_left_in_millis = work_length;
-                    starting_time = work_length;
                     break;
                 case long_break_state:
                     current_state = Timer_Session_State.idle_state;
@@ -293,6 +304,8 @@ public class Timer_Screen extends Fragment {
                 default:
                     Database.showPopup(getActivity(), "Error: Next State is Undefined");
             }
+            starting_time = time_left_in_millis;
+
 
 
         }
@@ -326,7 +339,6 @@ public class Timer_Screen extends Fragment {
                 Toast.makeText(getActivity(), "Error: Failed creating dialogue", Toast.LENGTH_LONG).show();
                 return builder;
         }
-
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

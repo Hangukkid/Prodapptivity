@@ -34,6 +34,7 @@ public class Checklist_Screen extends Fragment {
     private ArrayList<Task> checklist;
     private Checklist_Adapter task_adapter;
     private ListView checklist_view;
+    private Button add_subject_btn;
     private Button add_task_btn;
     private Spinner subject_pick_spinner;
     private String default_all_subjects = "All Subjects";
@@ -92,6 +93,8 @@ public class Checklist_Screen extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+        add_subject_btn = (Button) view.findViewById(R.id.add_subject_btn);
+        addSubjectOnClick();
         add_task_btn = (Button) view.findViewById(R.id.add_task_btn);
         addTaskOnClick();
 
@@ -105,6 +108,16 @@ public class Checklist_Screen extends Fragment {
 
     /************************HELPER FUNCTIONS*********************************************************/
 
+
+    public void addSubjectOnClick(){
+        add_subject_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent subjects = new Intent(getActivity(), Create_Subject.class);
+                startActivity(subjects);
+            }
+        });
+    }
 
     public void addTaskOnClick() {
         add_task_btn.setOnClickListener(new View.OnClickListener() {

@@ -1,7 +1,6 @@
 package matthew.won.utoronto.prod;
 
 import android.animation.ValueAnimator;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -46,7 +44,7 @@ public class Calendar_Screen extends Fragment {
     private int animation_speed;
     private int height_offset;
     private boolean height_init = false;
-    Button subject_make_btn;
+//    Button subject_make_btn;
 
     private SQL_Helper database;
     private Datatype_SQL<Task> checklist_sql;
@@ -84,9 +82,9 @@ public class Calendar_Screen extends Fragment {
         animation_speed = 400;
         height_offset = 60;
 
+
         database = Database.getDatabase();
         checklist_sql = Database.getTaskSQL();
-
 
         checklist = new ArrayList<>();
         task_adapter = new Checklist_Adapter(getActivity(), R.layout.checklist_item, checklist);
@@ -149,15 +147,14 @@ public class Calendar_Screen extends Fragment {
         sliding_layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d("Touch", "Touch occurred");
                 mDetector.onTouchEvent(event);
                 return true;
             }
         });
 
 
-        subject_make_btn = (Button) view.findViewById(R.id.subject_make_btn);
-        makeSubjectPage();
+//        subject_make_btn = (Button) view.findViewById(R.id.subject_make_btn);
+//        makeSubjectPage();
 
 
     }
@@ -203,16 +200,16 @@ public class Calendar_Screen extends Fragment {
 //        calendar_list_view.setVisibility(View.GONE);
     }
 
-    // Make activity for subject page
-    private void makeSubjectPage() {
-        subject_make_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent subjects = new Intent(getActivity(), Create_Subject.class);
-                startActivity(subjects);
-            }
-        });
-    }
+//    // Make activity for subject page
+//    private void makeSubjectPage() {
+//        subject_make_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent subjects = new Intent(getActivity(), Create_Subject.class);
+//                startActivity(subjects);
+//            }
+//        });
+//    }
 
     private void setupListView (String date) {
         checklist_sql.filterby(date, 3);
