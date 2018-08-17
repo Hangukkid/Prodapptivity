@@ -1,4 +1,4 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Screens;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,8 +18,7 @@ import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
 import matthew.won.utoronto.prod.Datatypes.Subject;
 import matthew.won.utoronto.prod.Datatypes.Task;
-
-
+import matthew.won.utoronto.prod.R;
 
 /*TO DO:
  * Media Player

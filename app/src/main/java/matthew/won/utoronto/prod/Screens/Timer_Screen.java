@@ -1,4 +1,4 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Screens;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -29,6 +29,7 @@ import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Pomodoro_Data;
 import matthew.won.utoronto.prod.Datatypes.Timer_Session_State;
+import matthew.won.utoronto.prod.R;
 
 /*
 To make the new saved settings take effect, you have to press "Reset" first

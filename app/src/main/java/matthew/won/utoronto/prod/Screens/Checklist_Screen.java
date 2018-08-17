@@ -1,4 +1,4 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Screens;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,11 +17,14 @@ import java.util.ArrayList;
 
 import matthew.won.utoronto.prod.Adapters.Checklist_Adapter;
 import matthew.won.utoronto.prod.Adapters.Subject_Adapter;
+import matthew.won.utoronto.prod.Create_Subject;
+import matthew.won.utoronto.prod.Create_Task;
 import matthew.won.utoronto.prod.Database.Database;
 import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Subject;
 import matthew.won.utoronto.prod.Datatypes.Task;
+import matthew.won.utoronto.prod.R;
 
 import static android.app.Activity.RESULT_OK;
 

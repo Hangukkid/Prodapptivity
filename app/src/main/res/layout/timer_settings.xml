@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Screens.Settings">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:text="Timer"
+        android:textAllCaps="true"
+        android:textSize="25dp"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/work_label"
+        android:layout_width="220dp"
+        android:layout_height="32dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="71dp"
+        android:text="Duration of work period:"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/worklength"
+        android:layout_width="96dp"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/work_label"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/short_break_label"
+        android:layout_width="220dp"
+        android:layout_height="32dp"
+        android:layout_alignBottom="@+id/breaklength"
+        android:layout_alignStart="@+id/work_label"
+        android:text="Duration of short break:"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/breaklength"
+        android:layout_width="96dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/worklength"
+        android:layout_below="@+id/worklength"
+        android:ems="10"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/long_break_label"
+        android:layout_width="220dp"
+        android:layout_height="32dp"
+        android:layout_alignBottom="@+id/longbreaklength"
+        android:layout_alignStart="@+id/work_label"
+        android:text="Duration of long break:"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/longbreaklength"
+        android:layout_width="96dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/worklength"
+        android:layout_below="@+id/breaklength"
+        android:ems="10"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/sessions_description"
+        android:layout_width="220dp"
+        android:layout_height="32dp"
+        android:layout_alignBottom="@+id/numofsessions"
+        android:layout_alignStart="@+id/work_label"
+        android:text="Number of sessions:"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/numofsessions"
+        android:layout_width="96dp"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/worklength"
+        android:layout_below="@+id/longbreaklength"
+        android:ems="10"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+
+</RelativeLayout>

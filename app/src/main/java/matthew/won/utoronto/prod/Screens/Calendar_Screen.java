@@ -1,4 +1,4 @@
-package matthew.won.utoronto.prod;
+package matthew.won.utoronto.prod.Screens;
 
 import android.animation.ValueAnimator;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import matthew.won.utoronto.prod.Database.Database;
 import matthew.won.utoronto.prod.Database.Datatype_SQL;
 import matthew.won.utoronto.prod.Database.SQL_Helper;
 import matthew.won.utoronto.prod.Datatypes.Task;
+import matthew.won.utoronto.prod.R;
 
 
 public class Calendar_Screen extends Fragment {
@@ -266,8 +267,6 @@ public class Calendar_Screen extends Fragment {
 
         //Used max_heights and offsets to set how far the screen moves. Will be different on various mobile device sizes
         public void onBottomToTop() {
-            Log.d("Touch", "Expand occurred");
-
             if (!shown) {
                 shown = true;
                 expand(sliding_layout, animation_speed, max_height);
@@ -276,8 +275,6 @@ public class Calendar_Screen extends Fragment {
         }
 
         public void onTopToBottom() {
-            Log.d("Touch", "Collapse occurred");
-
             if (shown) {
                 shown = false;
                 collapse(sliding_layout, animation_speed, start_height);

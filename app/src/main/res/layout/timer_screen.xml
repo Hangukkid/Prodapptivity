@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Timer_Screen">
+    tools:context=".Screens.Timer_Screen">
 
     <TextView
         android:id="@+id/timer_value"

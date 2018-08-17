@@ -4,9 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import matthew.won.utoronto.prod.Calendar_Screen;
-import matthew.won.utoronto.prod.Checklist_Screen;
-import matthew.won.utoronto.prod.Timer_Screen;
+import matthew.won.utoronto.prod.Screens.Calendar_Screen;
+import matthew.won.utoronto.prod.Screens.Checklist_Screen;
+import matthew.won.utoronto.prod.Screens.Timer_Screen;
 
 public class Pager_Adapter extends FragmentPagerAdapter {
     private static final int NUM_PAGES = 3;

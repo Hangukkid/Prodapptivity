@@ -10,19 +10,8 @@
         android:id="@+id/calendar_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/my_toolbar"
         android:layout_alignParentLeft="true"
         android:elevation="2dp"/>
-
-    <!--<Button-->
-        <!--android:id="@+id/subject_make_btn"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignBottom="@+id/calendar_view"-->
-        <!--android:text="Subject"-->
-        <!--android:layout_marginRight="33dp"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:elevation="1dp"/>-->
 
     <LinearLayout
         android:id="@+id/sliding_layout"
