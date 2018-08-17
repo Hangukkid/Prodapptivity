@@ -24,7 +24,9 @@
         </activity>
         <activity
             android:name=".Screens.Settings"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
         <activity
             android:name=".Create_Subject"
             android:label="Create Subject"></activity>
