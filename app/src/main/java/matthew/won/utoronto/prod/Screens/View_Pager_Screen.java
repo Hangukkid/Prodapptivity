@@ -78,7 +78,7 @@ public class View_Pager_Screen extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.settings:
+            case R.id.timer_settings:
                 Intent settings = new Intent(this, Settings.class);
                 startActivity(settings);
                 return true;

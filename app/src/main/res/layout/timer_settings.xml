@@ -100,5 +100,13 @@
         android:textAlignment="center"
         android:textSize="20sp" />
 
+    <Button
+        android:id="@+id/timer_save_btn"
+        android:layout_width="99dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/worklength"
+        android:layout_centerVertical="true"
+        android:text="Save" />
+
 
 </RelativeLayout>
